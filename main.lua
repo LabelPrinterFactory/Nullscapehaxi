@@ -31,9 +31,9 @@ while task.wait() do -- such a band aid ahh thing i made in seconds
 		end
 	end
 	if CurrentGift then
-		if CurrentDist > 50 then
-			local Target = CFrame.lookAt(Plr.PrimaryPart.Position,CurrentGift.Position).LookVector * 20
-			Plr:PivotTo(CFrame.new(Target))
+		if CurrentDist > 150 then
+			local Target = CFrame.lookAt(Plr.PrimaryPart.Position,CurrentGift.Position).LookVector * 75
+			Plr:PivotTo(CFrame.new(Target+Plr.PrimaryPart.Position))
 		else
 			Plr:PivotTo(CurrentGift.CFrame)
 		end
@@ -54,10 +54,3 @@ while task.wait() do -- such a band aid ahh thing i made in seconds
 		break -- AH MY LEGS THEY BROKE D;
 	end
 end -- among us
-
-local Item_Pool = game.Workspace:WaitForChild("Item_Pools")
-for i,v:BasePart in pairs(Item_Pool.GiftShell:GetChildren()) do
-	if v.Name == "GiftShell" then
-		
-	end
-end
