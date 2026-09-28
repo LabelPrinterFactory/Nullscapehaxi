@@ -1,4 +1,3 @@
-task.wait(3)
 local Item_Pool = game.Workspace:WaitForChild("Item_Pools") -- gets the item_pool where the gifts are stored
 local Plr = game.Players.LocalPlayer.Character :: Model -- character
 local NilTimer = 0
