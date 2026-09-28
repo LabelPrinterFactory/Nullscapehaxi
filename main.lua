@@ -62,35 +62,3 @@ for i,v:BasePart in pairs(Item_Pool.GiftShell:GetChildren()) do
 		
 	end
 end
---[[local H = Instance.new("Highlight",Item_Pool.GiftShell)
-game.Debris:AddItem(H,5)--]]
-
---local Item_Pool = workspace:WaitForChild("Item_Pools") -- gets the item_pool where the gifts are stored
---[[local Plr = game.Players.LocalPlayer.Character :: BasePart -- character
-while game:GetService("RunService").RenderStepped:Wait() do -- loop. duh.
-	local Gift = Item_Pool:FindFirstChild("Gift")
-	if Gift then
-		Plr:PivotTo(Gift:FindFirstChildWhichIsA("BasePart").CFrame)
-	else
-		break -- AH MY LEGS THEY BROKE D;
-	end
-end --]]
-
-for i,v in pairs(workspace:GetDescendants()) do
-	if i%512 == 0 then
-		task.wait()
-	end
-	if v:IsA("Highlight") then
-		task.wait()
-		print(v:GetFullName())
-	end
-end
-local Item_Pool = game.Workspace:WaitForChild("Item_Pools")
-for i,v in pairs(Item_Pool.GiftShell:GetChildren()) do
-	print(v.Name)
-	print(v.ClassName)
-end
-
-for i,v in pairs(workspace:GetChildren()) do
-	print(v)
-end
