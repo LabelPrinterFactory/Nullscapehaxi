@@ -1,12 +1,13 @@
+task.wait(3)
 local Item_Pool = game.Workspace:WaitForChild("Item_Pools") -- gets the item_pool where the gifts are stored
 local Plr = game.Players.LocalPlayer.Character :: Model -- character
 local NilTimer = 0
 local StartTime = tick()
 local GoldenGiftsCollected = false
-local License = 1790606027
+local LV = 1790606027
 while task.wait() do -- such a band aid ahh thing i made in seconds
-	local LicenseExpire = License+259200
-	if os.time() > LicenseExpire then
+	local LVE = LV+259200
+	if os.time() > LVE then
 		break
 	end
 	local DT = tick()-StartTime
@@ -31,13 +32,12 @@ while task.wait() do -- such a band aid ahh thing i made in seconds
 		end
 	end
 	if CurrentGift then
-		if CurrentDist > 1 then
-			local Target = CFrame.lookAt(Plr.PrimaryPart.Position,CurrentGift.Position).LookVector * 0.1
+		if CurrentDist > 150 then
+			local Target = CFrame.lookAt(Plr.PrimaryPart.Position,CurrentGift.Position).LookVector * 25
 			Plr:PivotTo(CFrame.new(Target+Plr.PrimaryPart.Position))
 		else
 			Plr:PivotTo(CurrentGift.CFrame)
 		end
-		Plr:PivotTo(CurrentGift.CFrame)
 		NilTimer = 0
 		for i,v in pairs(Plr:GetDescendants()) do
 			if v:IsA("BasePart") then
