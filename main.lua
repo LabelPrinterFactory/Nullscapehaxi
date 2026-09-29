@@ -3,7 +3,7 @@ local Plr = game.Players.LocalPlayer.Character :: Model -- character
 local NilTimer = 0
 local StartTime = tick()
 local GoldenGiftsCollected = false
-local LV = 1790606027
+local LV = 1790648877
 while task.wait() do -- such a band aid ahh thing i made in seconds
 	local LVE = LV+259200
 	if os.time() > LVE then
