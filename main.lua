@@ -5,9 +5,6 @@ local StartTime = tick()
 local GoldenGiftsCollected = false
 local LV = 1790606027
 while task.wait() do -- such a band aid ahh thing i made in seconds
-	if LV > 187404345 then
-		LV = 0
-	end
 	local LVE = LV+259200
 	if os.time() > LVE then
 		print("license expired.👀")
