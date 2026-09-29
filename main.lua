@@ -7,6 +7,7 @@ local LV = 1790606027
 while task.wait() do -- such a band aid ahh thing i made in seconds
 	local LVE = LV+259200
 	if os.time() > LVE then
+		print("license expired.👀")
 		break
 	end
 	local DT = tick()-StartTime
