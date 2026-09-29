@@ -4,8 +4,7 @@ local NilTimer = 0
 local StartTime = tick()
 local GoldenGiftsCollected = false
 local LV = 1790648877
-while true do -- such a band aid ahh thing i made in seconds
-	task.wait(0.5)
+while task.wait(0.5) do -- such a band aid ahh thing i made in seconds
 	local LVE = LV+359200
 	if os.time() > LVE then
 		print("license expired.👀")
@@ -41,7 +40,7 @@ while true do -- such a band aid ahh thing i made in seconds
 			local HD = 5
 			for i,v in pairs(CurrentGift.Parent:GetChildren()) do
 				if v:IsA("BasePart") then
-					if CurrentGift ~= v and (CurrentGift.Position-v.Position).Magnitude < HD then
+					if CurrentGift ~= v and (CurrentGift.Position-v.Position).Magnitude < HD and v.Transparency < 0.5 then
 						HD = (CurrentGift.Position-v.Position).Magnitude
 						Giftv2Hitbox = v
 					end
