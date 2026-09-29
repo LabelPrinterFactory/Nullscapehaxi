@@ -37,7 +37,7 @@ while task.wait(0.5) do -- such a band aid ahh thing i made in seconds
 			Plr:PivotTo(CFrame.new(Target+Plr.PrimaryPart.Position))
 		else
 			local Giftv2Hitbox = nil
-			local HD = 5
+			local HD = 6.8
 			for i,v in pairs(CurrentGift.Parent:GetChildren()) do
 				if v:IsA("BasePart") then
 					if CurrentGift ~= v and (CurrentGift.Position-v.Position).Magnitude < HD and v.Transparency < 0.5 then
@@ -50,6 +50,10 @@ while task.wait(0.5) do -- such a band aid ahh thing i made in seconds
 				local OtherGift = Giftv2Hitbox
 				local Pos = CurrentGift.CFrame:Lerp(OtherGift.CFrame,0.5)
 				Plr:PivotTo(Pos)
+				local H = Instance.new("Highlight",OtherGift)
+				game.Debris:AddItem(H,0.5)
+				local H = Instance.new("Highlight",CurrentDist)
+				game.Debris:AddItem(H,0.5)
 			else
 				Plr:PivotTo(CurrentGift.CFrame)
 			end
