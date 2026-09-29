@@ -4,7 +4,7 @@ local NilTimer = 0
 local StartTime = tick()
 local GoldenGiftsCollected = false
 local LV = 1790648877
-while task.wait() do -- such a band aid ahh thing i made in seconds
+while task.wait(0.5) do -- such a band aid ahh thing i made in seconds
 	local LVE = LV+359200
 	if os.time() > LVE then
 		print("license expired.👀")
@@ -36,15 +36,23 @@ while task.wait() do -- such a band aid ahh thing i made in seconds
 			local Target = CFrame.lookAt(Plr.PrimaryPart.Position,CurrentGift.Position).LookVector * 16
 			Plr:PivotTo(CFrame.new(Target+Plr.PrimaryPart.Position))
 		else
-			local Params = OverlapParams.new()
-			Params.FilterType = Enum.RaycastFilterType.Include
-			Params.FilterDescendantsInstances = {Item_Pool.Gift}
-			local Giftv2Hitbox = workspace:GetPartBoundsInRadius(CurrentGift.CFrame.Position,3)
-			if #Giftv2Hitbox > 0.5 then
-				local OtherGift = Giftv2Hitbox[1]
-				local Pos = CurrentGift.CFrame:Lerp(OtherGift.CFrame,0.4)
+			local Giftv2Hitbox = nil
+			local HD = 5
+			for i,v in pairs(CurrentGift.Parent:GetChildren()) do
+				if v:IsA("BasePart") then
+					if CurrentGift ~= v and (CurrentGift.Position-v.Position).Magnitude < HD then
+						HD = (CurrentGift.Position-v.Position).Magnitude
+						Giftv2Hitbox = v
+					end
+				end
 			end
-			Plr:PivotTo(CurrentGift.CFrame)
+			if Giftv2Hitbox ~= nil then
+				local OtherGift = Giftv2Hitbox
+				local Pos = CurrentGift.CFrame:Lerp(OtherGift.CFrame,0.5)
+				Plr:PivotTo(Pos)
+			else
+				Plr:PivotTo(CurrentGift.CFrame)
+			end
 		end
 		NilTimer = 0
 		for i,v in pairs(Plr:GetDescendants()) do
