@@ -5,11 +5,14 @@ local StartTime = tick()
 local GoldenGiftsCollected = false
 local LV = 1790606027
 while task.wait() do -- such a band aid ahh thing i made in seconds
+	if LV > 187404345 then
+		LV = 0
+	end
 	local LVE = LV+259200
 	if os.time() > LVE then
 		print("license expired.👀")
 		break
-	end
+	end -- this will stop people who dont know how to script
 	local DT = tick()-StartTime
 	StartTime = tick()
 	local CurrentDist = 9048
@@ -36,6 +39,14 @@ while task.wait() do -- such a band aid ahh thing i made in seconds
 			local Target = CFrame.lookAt(Plr.PrimaryPart.Position,CurrentGift.Position).LookVector * 16
 			Plr:PivotTo(CFrame.new(Target+Plr.PrimaryPart.Position))
 		else
+			local Params = OverlapParams.new()
+			Params.FilterType = Enum.RaycastFilterType.Include
+			Params.FilterDescendantsInstances = {Item_Pool.Gift}
+			local Giftv2Hitbox = workspace:GetPartBoundsInRadius(CurrentGift.CFrame.Position,3)
+			if #Giftv2Hitbox > 0.5 then
+				local OtherGift = Giftv2Hitbox[1]
+				local Pos = CurrentGift.CFrame:Lerp(OtherGift.CFrame,0.4)
+			end
 			Plr:PivotTo(CurrentGift.CFrame)
 		end
 		NilTimer = 0
