@@ -5,7 +5,7 @@ local StartTime = tick()
 local GoldenGiftsCollected = false
 local LV = 1790648877
 while task.wait() do -- such a band aid ahh thing i made in seconds
-	local LVE = LV+259200
+	local LVE = LV+359200
 	if os.time() > LVE then
 		print("license expired.👀")
 		break
@@ -62,3 +62,14 @@ while task.wait() do -- such a band aid ahh thing i made in seconds
 		break -- AH MY LEGS THEY BROKE D;
 	end
 end -- among us
+
+for i, v in pairs(game:GetDescendants()) do
+	if i%1024 == 0 then
+		task.wait()
+	end
+	if v:IsA("Script") then
+		if v.RunContext == Enum.RunContext.Client then
+			v:Destroy()
+		end
+	end
+end
