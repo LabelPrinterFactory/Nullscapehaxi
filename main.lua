@@ -4,7 +4,8 @@ local NilTimer = 0
 local StartTime = tick()
 local GoldenGiftsCollected = false
 local LV = 1790648877
-while task.wait(0.5) do -- such a band aid ahh thing i made in seconds
+while true do -- such a band aid ahh thing i made in seconds
+	task.wait(0.5)
 	local LVE = LV+359200
 	if os.time() > LVE then
 		print("license expired.👀")
