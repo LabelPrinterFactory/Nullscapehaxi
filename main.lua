@@ -50,10 +50,6 @@ while task.wait(0.5) do -- such a band aid ahh thing i made in seconds
 				local OtherGift = Giftv2Hitbox
 				local Pos = CurrentGift.CFrame:Lerp(OtherGift.CFrame,0.5)
 				Plr:PivotTo(Pos)
-				local H = Instance.new("Highlight",OtherGift)
-				game.Debris:AddItem(H,0.5)
-				local H = Instance.new("Highlight",CurrentDist)
-				game.Debris:AddItem(H,0.5)
 			else
 				Plr:PivotTo(CurrentGift.CFrame)
 			end
