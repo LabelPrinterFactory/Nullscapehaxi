@@ -1,3 +1,4 @@
+local Upgrades = game:GetService("ReplicatedStorage"):WaitForChild("UpgradeFolder"):WaitForChild("Upgrades")
 local Item_Pool = game.Workspace:WaitForChild("Item_Pools")
 local Plr = game.Players.LocalPlayer.Character :: Model
 local StartTime = tick()
