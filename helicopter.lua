@@ -32,13 +32,13 @@ function RegisterCharacter()
 
 	local FlightDecay = 0
 
-	local matrix = false
-	local rings = 0
-	local sportshoes = false
-	local sharktail = false
-	local adrenaline = false
-	local hourglass = false
-	local ninjabelt = false
+	local matrix = true
+	local rings = 3
+	local sportshoes = true
+	local sharktail = true
+	local adrenaline = true
+	local hourglass = true
+	local ninjabelt = true
 
 	C = game:GetService("UserInputService").InputBegan:Connect(function(input: InputObject, gameProcessedEvent: boolean) 
 		if gameProcessedEvent then return end
