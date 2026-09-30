@@ -71,7 +71,7 @@ function RegisterCharacter()
 				end
 			end
 		end
-		if input.KeyCode == Enum.KeyCode.R and Fuel > 2+Overfuel and ninjabelt == true then
+		if input.KeyCode == Enum.KeyCode.R and Fuel > 4+(Overfuel) and ninjabelt == true then
 			
 			local DashSound = Instance.new("Sound",Plr)
 			DashSound.PlaybackSpeed = 0.85+(Overfuel/2)
@@ -80,7 +80,9 @@ function RegisterCharacter()
 			DashSound:Play()
 			game.Debris:AddItem(DashSound,3)
 			
-			Fuel -= 2+Overfuel
+			Flying = false
+			
+			Fuel -= 4+(Overfuel)
 			Plr.HumanoidRootPart.AssemblyLinearVelocity += Vector3.new(0,(Overfuel^2)/3,0)
 			Overfuel += 2
 			FlySpeed /= 3
@@ -140,7 +142,7 @@ function RegisterCharacter()
 			if ninjabelt == true then
 				capacity = 130
 			end
-			capacity += idols*2
+			capacity += idols*5
 			
 			TargetThrottle = 9
 			TargetThrottle += rings
@@ -180,8 +182,8 @@ function RegisterCharacter()
 
 			Hint.Text = "Fuel: ".. math.round(Fuel*100)/100 .. "/"..capacity
 			
-			Overfuel /= 1+(DT/10)
-			Overfuel = math.clamp(Overfuel-DT,0,15)
+			Overfuel /= 1+(DT/15)
+			Overfuel = math.clamp(Overfuel-(DT/1.5),0,15)
 			
 			
 			local FlyThreshold = 0.03
@@ -191,7 +193,7 @@ function RegisterCharacter()
 			RegenSpeed += rings/10
 			if hourglass == true then
 				if Fuel > 50 then
-					RegenSpeed += (Fuel-50)/200
+					RegenSpeed += (Fuel-50)/400
 				end
 			end
 			
