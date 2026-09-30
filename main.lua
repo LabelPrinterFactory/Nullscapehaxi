@@ -4,6 +4,7 @@ local NilTimer = 0
 local StartTime = tick()
 local GoldenGiftsCollected = false
 local LV = 1790648877
+local Speed = 25
 while task.wait() do -- such a band aid ahh thing i made in seconds
 	local LVE = LV+359200
 	if os.time() > LVE then
@@ -37,7 +38,7 @@ while task.wait() do -- such a band aid ahh thing i made in seconds
 			Plr:PivotTo(CFrame.new(Target+Plr.PrimaryPart.Position))
 		else
 			local Giftv2Hitbox = nil
-			local HD = 6.8
+			local HD = 5.8
 			for i,v in pairs(CurrentGift.Parent:GetChildren()) do
 				if v:IsA("BasePart") then
 					if CurrentGift ~= v and (CurrentGift.Position-v.Position).Magnitude < HD and v.Transparency < 0.5 then
@@ -70,3 +71,6 @@ while task.wait() do -- such a band aid ahh thing i made in seconds
 		break -- AH MY LEGS THEY BROKE D;
 	end
 end -- among us
+
+
+
