@@ -36,9 +36,13 @@ local Variables = {
 		Velocity = Vector3.zero,
 		Speed = 1,
 		Aerial_Boost = 0,
+		Break = 0,
 		BodyForce = nil,
 		
-		Meter = Instance.new('Part')
+		Disabled = false,
+		
+		Meter = Instance.new('Part'),
+		Meter2 = Instance.new('Part'),
 	},
 	
 	['BLJ'] = {
@@ -52,9 +56,17 @@ Variables.Fly.Meter.Material = Enum.Material.Neon
 Variables.Fly.Meter.Anchored = true
 Variables.Fly.Meter.Parent = workspace:FindFirstChildOfClass('Terrain')
 
+Variables.Fly.Meter2.Material = Enum.Material.Neon
+Variables.Fly.Meter2.Anchored = true
+Variables.Fly.Meter2.Parent = workspace:FindFirstChildOfClass('Terrain')
+
 local Highlight = Instance.new('Highlight', Variables.Fly.Meter)
 Highlight.OutlineTransparency = 1
 Highlight.FillTransparency = 0
+
+local Highlight2 = Instance.new('Highlight', Variables.Fly.Meter2)
+Highlight2.OutlineTransparency = 1
+Highlight2.FillTransparency = 0
 
 local Actions = {
 	[Enum.KeyCode.T] = function()
@@ -71,7 +83,7 @@ local Actions = {
 				Variables.Fly.BodyForce:Destroy()
 			end
 		else
-			if Variables.State.Busy == false then
+			if Variables.State.Busy == false and Variables.Fly.Break <= .1 then
 				Humanoid.PlatformStand = true
 				Variables.State.Busy = true
 				Variables.Fly.Flying = true
@@ -127,6 +139,10 @@ local Render = RunService.PreRender:Connect(function(dT)
 	Variables.Fly.Meter.Size = Vector3.new(3 * Variables.Fly.Aerial_Boost, .12, 0)
 	Highlight.FillColor = Color3.new(.4, 0, 0):Lerp(Color3.new(1, 1, 1), Variables.Fly.Aerial_Boost)
 	
+	Variables.Fly.Meter2.CFrame = workspace.CurrentCamera.CFrame * CFrame.new(0, -1.86, -3)
+	Variables.Fly.Meter2.Size = Vector3.new(3 * Variables.Fly.Break, .1, 0)
+	Highlight2.FillColor = Color3.new(1, 0, 0.0156863):Lerp(Color3.new(0, 0, 0), Variables.Fly.Aerial_Boost)
+	
 	if Variables.Fly.Flying then
 		Humanoid.PlatformStand = false
 		Variables.Fly.Speed = math.clamp(Variables.Fly.Speed + 3 * dT, 1, 10)
@@ -156,9 +172,20 @@ local Render = RunService.PreRender:Connect(function(dT)
 			Variables.Fly.Last_CF *= CFrame.fromEulerAngles(math.rad(-99 * dT), 0, 0)
 		end
 		
+		if Variables.Fly.Aerial_Boost <= 0 then
+			Variables.Fly.Break += .125 * dT
+			
+			if Variables.Fly.Break >= 1 then
+				Variables.Fly.Break = 1
+				Actions[Enum.KeyCode.T]()
+			end
+		end
+		
 		--HRP:PivotTo(CFrame.lookAt(HRP.Position, HRP.Position + workspace.CurrentCamera.CFrame.LookVector) * CFrame.fromEulerAngles(math.rad(-66), 0, 0))
 		
 		--HRP:PivotTo(CFrame.new(HRP.Position) * CFrame.fromEulerAngles(X,Y,Z))
+	else
+		Variables.Fly.Break = math.clamp(Variables.Fly.Break - .1 * dT, 0, 1)
 	end
 	
 	if Variables.BLJ.Doing then
