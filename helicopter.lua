@@ -66,8 +66,8 @@ function RegisterCharacter()
 				end
 			end
 		end
-		if input.KeyCode == Enum.KeyCode.R and Fuel > 1.5 and ninjabelt == true then
-			Fuel -= 1.5
+		if input.KeyCode == Enum.KeyCode.R and Fuel > 4 and ninjabelt == true then
+			Fuel -= 4
 			FlySpeed /= 3
 			local DashSpeed = 42
 			DashSpeed += (rings*3)
