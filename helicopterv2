@@ -195,7 +195,25 @@ local Render = RunService.PreRender:Connect(function(dT)
 			Animations.BLJ2:Play(0, .7)
 			Animations.BLJ2.TimePosition = 2.5
 			Variables.BLJ.Jump_Delay = math.clamp(Variables.BLJ.Jump_Delay - .03, .07, .5)
-			HRP.AssemblyLinearVelocity += HRP.CFrame.LookVector * -46
+			if Humanoid.FloorMaterial == Enum.Material.Air then
+				HRP.AssemblyLinearVelocity += HRP.CFrame.LookVector * -46
+			else
+				local BV = Instance.new('BodyVelocity', HRP)
+				BV.MaxForce = Vector3.new(1,1,1) * 1500000
+				local a = UserInputService:IsKeyDown(Enum.KeyCode.Space)
+				BV.Velocity = HRP.CFrame.LookVector * -((166 - (Variables.BLJ.Jump_Delay * 800)) * (if a then 1 else 0.05))
+				
+				local params = RaycastParams.new()
+				params.FilterDescendantsInstances = {Character}
+				params.FilterType = Enum.RaycastFilterType.Exclude
+				local pos = HRP.Position - Vector3.new(0, 2.35, 0)
+				local ray = workspace:Raycast(pos, Vector3.new(0, -5, 0), params)
+				if ray then
+					HRP.CFrame *= CFrame.new(0, -(ray.Distance), 0)
+				end
+				
+				game:GetService('Debris'):AddItem(BV, .06)
+			end
 			
 			local Snd = Instance.new('Sound', workspace)
 			Snd.Volume = .3
