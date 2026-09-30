@@ -1,4 +1,4 @@
-task.wait(2)
+task.wait(1)
 function RegisterCharacter()
 	local Upgrades = game:GetService("ReplicatedStorage"):WaitForChild("UpgradeFolder"):WaitForChild("Upgrades")
 	local Item_Pool = game.Workspace:WaitForChild("Item_Pools")
@@ -19,7 +19,14 @@ function RegisterCharacter()
 	HelicopterSound.SoundId = "rbxassetid://99103708154004"
 	HelicopterSound.Looped = true
 	HelicopterSound.Volume = 0.25
-
+	
+	local CharacterLoaded = false
+	
+	game.Players.LocalPlayer.CharacterAdded:Once(function(character: Model) 
+		CharacterLoaded = true
+		print("loadign")
+	end)
+	
 	local FlyAnimPlaying = false
 	FlyAnimation.AnimationId = FlyID
 	local LoadedAnimation = Plr.Humanoid:LoadAnimation(FlyAnimation) :: AnimationTrack
@@ -32,25 +39,26 @@ function RegisterCharacter()
 
 	local FlightDecay = 0
 
-	local matrix = false
-	local rings = 0
-	local sportshoes = false
-	local sharktail = false
-	local adrenaline = false
-	local hourglass = false
-	local ninjabelt = false
+	local matrix = true
+	local rings = 3
+	local idols = 5
+	local sportshoes = true
+	local sharktail = true
+	local adrenaline = true
+	local hourglass = true
+	local ninjabelt = true
+	local gracewings = true
 
 	C = game:GetService("UserInputService").InputBegan:Connect(function(input: InputObject, gameProcessedEvent: boolean) 
 		if gameProcessedEvent then return end
 		if input.KeyCode == Enum.KeyCode.F then
 			if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.S) and sharktail == true and Flying == false and FlySpeed > 1 then
 				Plr.HumanoidRootPart.AssemblyLinearVelocity *= -1.5
-				Fuel -= 1
+				Fuel -= 0.2
 				FlySpeed = 0
 				FlightDecay = 0
 			else
 				Flying = not Flying
-				print(Flying)
 				if Flying == true then
 					if FlySpeed < 0.05 then
 						FlySpeed = 0.05
@@ -58,16 +66,16 @@ function RegisterCharacter()
 				end
 			end
 		end
-		if input.KeyCode == Enum.KeyCode.R and Fuel > 5 and ninjabelt == true then
-			Fuel -= 5
-			FlySpeed /= 4
-			local DashSpeed = 32
-			DashSpeed += rings
+		if input.KeyCode == Enum.KeyCode.R and Fuel > 1.5 and ninjabelt == true then
+			Fuel -= 1.5
+			FlySpeed /= 3
+			local DashSpeed = 42
+			DashSpeed += (rings*3)
 			if adrenaline == true then
-				TargetThrottle += 1.5
+				DashSpeed += 4.5
 			end
 			if sportshoes == true then
-				TargetThrottle += 1.5
+				DashSpeed += 4.5
 			end
 			FlySpeed += DashSpeed
 			FlightDecay += DashSpeed
@@ -78,9 +86,9 @@ function RegisterCharacter()
 	while task.wait() do
 		local WillBreak = false
 		pcall(function(...) 
-			print(FlightDecay)
-			if not BF.Parent.Parent.Parent or Plr.Humanoid.Health < 0.1 then
+			if CharacterLoaded == true then
 				WillBreak = true
+				print("BROKENLEGS")
 				C:Disconnect()
 			end
 
@@ -102,10 +110,19 @@ function RegisterCharacter()
 			if Upgrades:FindFirstChild("SportShoes") then
 				sportshoes = true
 			end
+			if Upgrades:FindFirstChild("GraceWings") then
+				gracewings = true
+			end
 			if Upgrades:FindFirstChild("SwiftnessRing") then
 				rings = Upgrades:FindFirstChild("SwiftnessRing").Value
 			end
-
+			if Upgrades:FindFirstChild("GiftIdol") then
+				idols = Upgrades:FindFirstChild("GiftIdol").Value
+			end
+			
+			local capacity = 100
+			capacity += idols*2
+			
 			TargetThrottle = 9
 			TargetThrottle += rings
 			if adrenaline == true then
@@ -142,29 +159,43 @@ function RegisterCharacter()
 			Hint.Text = "Fuel: ".. math.round(Fuel*100)/100 .."%"
 
 			local FlyThreshold = 0.03
-
+			
+			
+			local RegenSpeed = 0.6
+			RegenSpeed += rings/10
+			if hourglass == true then
+				if Fuel > 50 then
+					RegenSpeed += (Fuel-50)/200
+				end
+			end
+			
+			FlyThreshold = 1.5
+			
+			
 			if Flying == true then
+				RegenSpeed = 0
 				FlightDecay /= 1+(DT*4)
-				local Acceleration = 1
+				local Acceleration = 0.8
+				if gracewings == true then
+					Acceleration = 1.2
+				end
 				if hourglass == true then
 					Acceleration = 3
 				end
 				FlySpeed = math.lerp(FlySpeed,TargetThrottle,DT*Acceleration)
-				Fuel -= 10*(DT/4)
-			else
-				local RegenSpeed = 0.6
-				RegenSpeed += rings/10
-				if hourglass == true then
-					if Fuel > 50 then
-						RegenSpeed += (Fuel-50)/200
-					end
+				
+				if idols == 5 then
+					Fuel -= 10*(DT/7)
+				else
+					Fuel -= 10*(DT/6)
 				end
+			else
 				FlySpeed = math.lerp(FlySpeed,0,DT)
-				FlyThreshold = 1.5
-				Fuel = math.clamp(Fuel+(DT*0.7),0,100)
+				
 			end
 
-
+			
+			
 			if FlightDecay > 0 then
 				local DecayAmount = (FlightDecay+5)*(DT/2)
 				FlightDecay -= DecayAmount
@@ -173,6 +204,7 @@ function RegisterCharacter()
 
 
 			if FlySpeed > FlyThreshold then
+				RegenSpeed /= 2
 				BGyro.MaxTorque = Vector3.one*(125+((FlySpeed*workspace.Gravity)*0.1))
 				BGyro.D = 200
 				BGyro.P = 1500
@@ -189,7 +221,10 @@ function RegisterCharacter()
 
 				local HorizontalDrag = 2
 				local FowardSpeed = 125
-
+				if gracewings == false then
+					HorizontalDrag = 1
+					FowardSpeed = 70
+				end
 				if matrix == true then
 					HorizontalDrag = 20
 					FowardSpeed = 1000
@@ -210,7 +245,8 @@ function RegisterCharacter()
 				end
 				BGyro.MaxTorque = Vector3.zero
 			end
-
+			
+			Fuel = math.clamp(Fuel+(DT*(RegenSpeed/1.5)),0,capacity)
 			HelicopterSound.PlaybackSpeed = FlySpeed/5
 
 		--[[if Flying == true then
@@ -246,7 +282,12 @@ CC = game.UserInputService.InputBegan:Connect(function(input: InputObject, gameP
 	end
 end)
 
-RegisterCharacter()
-C = game.Players.LocalPlayer.CharacterAdded:Connect(function(character: Model)
+task.spawn(function()
 	RegisterCharacter()
+end)
+C = game.Players.LocalPlayer.CharacterAdded:Connect(function(character: Model)
+	task.spawn(function()
+		task.wait(1)
+		RegisterCharacter()
+	end)
 end)
