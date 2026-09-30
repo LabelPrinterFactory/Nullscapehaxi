@@ -1,0 +1,202 @@
+task.wait(1)
+local UserInputService = game:GetService('UserInputService')
+local Players = game:GetService('Players')
+local RunService = game:GetService('RunService')
+local TweenService = game:GetService('TweenService')
+
+local Character : Model = Players.LocalPlayer.Character
+local HRP : BasePart = Character:WaitForChild('HumanoidRootPart')
+local Humanoid : Humanoid = Character:WaitForChild('Humanoid')
+local Animator : Animator = Character:FindFirstChild('Animator', true)
+
+local Util_Functions = {
+	['Create_Animation'] = function(ID, Looped, Speed, Priority : Enum.AnimationPriority)
+		local Animation = Instance.new('Animation')
+		Animation.AnimationId = ID
+		
+		local Track = Animator:LoadAnimation(Animation)
+		Track.Looped = Looped or false
+		Track.Priority = Priority or Enum.AnimationPriority.Action
+		Track:AdjustSpeed(Speed or 1)
+		
+		return Track
+	end,
+}
+
+local Animations = {}
+
+local Variables = {
+	['State'] = {
+		Busy = false,
+	},
+	
+	['Fly'] = {
+		Flying = false,
+		Last_CF = CFrame.new(0, 0, 0),
+		Velocity = Vector3.zero,
+		Speed = 1,
+		Aerial_Boost = 0,
+		BodyForce = nil,
+	},
+	
+	['BLJ'] = {
+		Doing = false,
+		Jump_Delay = .5,
+		Last_Jump = 0
+	}
+}
+
+local Actions = {
+	[Enum.KeyCode.T] = function()
+		if Variables.Fly.Flying == true then
+			Humanoid.PlatformStand = false
+			Variables.Fly.Flying = false
+			Variables.State.Busy = false
+			
+			Variables.Fly.Speed = 1
+			
+			Animations.Helicopter:Stop()
+			
+			if Variables.Fly.BodyForce then
+				Variables.Fly.BodyForce:Destroy()
+			end
+		else
+			if Variables.State.Busy == false then
+				Humanoid.PlatformStand = true
+				Variables.State.Busy = true
+				Variables.Fly.Flying = true
+				
+				Variables.Fly.Aerial_Boost = 1
+				
+				Animations.Helicopter:Play()
+				Variables.Fly.Last_CF = HRP.CFrame
+				
+				Variables.Fly.BodyForce = Instance.new('BodyForce', HRP)
+			end
+		end
+	end,
+	
+	[Enum.KeyCode.B] = function()
+		if Variables.BLJ.Doing then
+			Variables.BLJ.Doing = false
+			HRP.AssemblyLinearVelocity = Vector3.new(0, .3 * HRP.AssemblyLinearVelocity.Magnitude)
+			Animations.BLJ1:Stop(0)
+			
+			local Highlight = Instance.new'Highlight'
+			Highlight.FillTransparency = 1
+			Highlight.Parent = Players.LocalPlayer.Character
+			
+			TweenService:Create(Highlight, TweenInfo.new(.2, Enum.EasingStyle.Linear), {OutlineTransparency = 1}):Play()
+			
+			task.delay(.2, function()
+				if Highlight then Highlight:Destroy() end
+			end)
+			
+			task.wait(.06)
+			
+			Variables.State.Busy = false
+		else
+			if Variables.State.Busy == false then
+				Variables.BLJ.Doing = true
+				Variables.State.Busy = true
+				
+				Variables.BLJ.Last_Jump = 0
+				Variables.BLJ.Jump_Delay = .3
+			end
+		end
+	end,
+}
+
+local Render = RunService.PreRender:Connect(function(dT)
+	if Variables.Fly.Flying then
+		Humanoid.PlatformStand = false
+		Variables.Fly.Speed = math.clamp(Variables.Fly.Speed + 3 * dT, 1, 10)
+		Variables.Fly.Aerial_Boost = math.clamp(Variables.Fly.Aerial_Boost - .3 * dT, 0, 1)
+		
+		local BF : BodyForce = Variables.Fly.BodyForce
+		BF.Force = ( HRP.CFrame.UpVector * (100 + (75 * Variables.Fly.Speed) + (3000 * Variables.Fly.Aerial_Boost)) ) + Vector3.new(0, 300, 0)
+		Animations.Helicopter:AdjustSpeed(Variables.Fly.Speed)
+		
+		local Magnitude = (HRP.AssemblyLinearVelocity - (BF.Force * 1)).Magnitude / 9425
+		print(Magnitude)
+		
+		HRP.AssemblyLinearVelocity = HRP.AssemblyLinearVelocity:Lerp(BF.Force * .2, (1 - Variables.Fly.Aerial_Boost) * (.73 * dT))
+		--HRP.AssemblyLinearVelocity = HRP.AssemblyLinearVelocity:Lerp(BF.Force, (Magnitude * dT) * (1.01 - Variables.Fly.Aerial_Boost))
+		
+		if HRP.AssemblyLinearVelocity.Magnitude > 170 then
+			HRP.AssemblyLinearVelocity = HRP.AssemblyLinearVelocity.Unit * 170
+		end
+		
+		local X,Y,Z = Variables.Fly.Last_CF:ToOrientation()
+		
+		if UserInputService:IsKeyDown(Enum.KeyCode.W) then
+			Variables.Fly.Last_CF *= CFrame.fromEulerAngles(math.rad(99 * dT), 0, 0)
+		end
+		
+		if UserInputService:IsKeyDown(Enum.KeyCode.S) then
+			Variables.Fly.Last_CF *= CFrame.fromEulerAngles(math.rad(-99 * dT), 0, 0)
+		end
+		
+		HRP:PivotTo(CFrame.lookAt(HRP.Position, HRP.Position + workspace.CurrentCamera.CFrame.LookVector) * CFrame.fromEulerAngles(math.rad(-66), 0, 0))
+		
+		--HRP:PivotTo(CFrame.new(HRP.Position) * CFrame.fromEulerAngles(X,Y,Z))
+	end
+	
+	if Variables.BLJ.Doing then
+		if time() - Variables.BLJ.Last_Jump > Variables.BLJ.Jump_Delay then
+			Variables.BLJ.Last_Jump = time()
+			Animations.BLJ1:Play(0, .9)
+			Animations.BLJ2:Play(0, .7)
+			Animations.BLJ2.TimePosition = 2.5
+			Variables.BLJ.Jump_Delay = math.clamp(Variables.BLJ.Jump_Delay - .03, .07, .5)
+			HRP.AssemblyLinearVelocity += HRP.CFrame.LookVector * -46
+			
+			local Snd = Instance.new('Sound', workspace)
+			Snd.Volume = .3
+			Snd.PlaybackSpeed = 1.3 - (Variables.BLJ.Jump_Delay * 1)
+			Snd.SoundId = 'rbxassetid://124652944831766'
+			Snd:Play()
+			game:GetService('Debris'):AddItem(Snd, 1)
+			
+			task.wait(.05 + Variables.BLJ.Jump_Delay / 3)
+			Animations.BLJ2:Stop(0)
+		end
+	end
+end)
+
+UserInputService.InputBegan:Connect(function(input: InputObject, gameProcessedEvent: boolean)  
+	if gameProcessedEvent == false then
+		for i,v in pairs(Actions) do
+			if i == input.KeyCode then
+				v()
+			end
+		end
+	end
+end)
+
+local function RegisterCharacter(Character : Model)
+	Character = Players.LocalPlayer.Character
+	HRP = Character:WaitForChild('HumanoidRootPart')
+	Humanoid = Character:WaitForChild('Humanoid')
+	Animator = Character:FindFirstChild('Animator', true) 
+	
+	
+	Animations = {
+		Helicopter = Util_Functions.Create_Animation('http://www.roblox.com/asset/?id=235542946', true, 1),
+		BLJ1 = Util_Functions.Create_Animation('http://www.roblox.com/asset/?id=168138731', true, 0),
+		BLJ2 = Util_Functions.Create_Animation('http://www.roblox.com/asset/?id=264034706', true, 0, Enum.AnimationPriority.Action3),
+	}
+	
+	
+	if Variables.Fly.Flying then
+		Actions[Enum.KeyCode.T]()
+	end
+	if Variables.BLJ.Doing then
+		Actions[Enum.KeyCode.B]()
+	end
+end
+
+RegisterCharacter(Character)
+Players.LocalPlayer.CharacterAdded:Connect(function(Char)
+	RegisterCharacter(Character)
+end)
