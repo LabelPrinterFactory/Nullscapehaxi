@@ -37,6 +37,8 @@ local Variables = {
 		Speed = 1,
 		Aerial_Boost = 0,
 		BodyForce = nil,
+		
+		Meter = Instance.new('Part')
 	},
 	
 	['BLJ'] = {
@@ -45,6 +47,14 @@ local Variables = {
 		Last_Jump = 0
 	}
 }
+
+Variables.Fly.Meter.Material = Enum.Material.Neon
+Variables.Fly.Meter.Anchored = true
+Variables.Fly.Meter.Parent = workspace:FindFirstChildOfClass('Terrain')
+
+local Highlight = Instance.new('Highlight', Variables.Fly.Meter)
+Highlight.OutlineTransparency = 1
+Highlight.FillTransparency = 0
 
 local Actions = {
 	[Enum.KeyCode.T] = function()
@@ -66,8 +76,6 @@ local Actions = {
 				Variables.State.Busy = true
 				Variables.Fly.Flying = true
 				
-				Variables.Fly.Aerial_Boost = 1
-				
 				Animations.Helicopter:Play()
 				Variables.Fly.Last_CF = HRP.CFrame
 				
@@ -79,7 +87,10 @@ local Actions = {
 	[Enum.KeyCode.B] = function()
 		if Variables.BLJ.Doing then
 			Variables.BLJ.Doing = false
-			HRP.AssemblyLinearVelocity = Vector3.new(0, .3 * HRP.AssemblyLinearVelocity.Magnitude)
+			if HRP.AssemblyLinearVelocity.Magnitude > 40 then
+				HRP.AssemblyLinearVelocity = Vector3.new(0, math.clamp(.3 * HRP.AssemblyLinearVelocity.Magnitude, 1, 200))
+				Variables.Fly.Aerial_Boost = math.clamp(Variables.Fly.Aerial_Boost + (.002 * HRP.AssemblyLinearVelocity.Magnitude), 0, 1)
+			end
 			Animations.BLJ1:Stop(0)
 			
 			local Highlight = Instance.new'Highlight'
@@ -108,13 +119,21 @@ local Actions = {
 }
 
 local Render = RunService.PreRender:Connect(function(dT)
+	if Humanoid.FloorMaterial ~= Enum.Material.Air then
+		Variables.Fly.Aerial_Boost = math.clamp(Variables.Fly.Aerial_Boost + .4 * dT, 0, 1)
+	end
+	
+	Variables.Fly.Meter.CFrame = workspace.CurrentCamera.CFrame * CFrame.new(0, -1.6, -3)
+	Variables.Fly.Meter.Size = Vector3.new(3 * Variables.Fly.Aerial_Boost, .12, 0)
+	Highlight.FillColor = Color3.new(.4, 0, 0):Lerp(Color3.new(1, 1, 1), Variables.Fly.Aerial_Boost)
+	
 	if Variables.Fly.Flying then
 		Humanoid.PlatformStand = false
 		Variables.Fly.Speed = math.clamp(Variables.Fly.Speed + 3 * dT, 1, 10)
-		Variables.Fly.Aerial_Boost = math.clamp(Variables.Fly.Aerial_Boost - .3 * dT, 0, 1)
+		Variables.Fly.Aerial_Boost = math.clamp(Variables.Fly.Aerial_Boost - .2 * dT, 0, 1)
 		
 		local BF : BodyForce = Variables.Fly.BodyForce
-		BF.Force = ( HRP.CFrame.UpVector * (100 + (75 * Variables.Fly.Speed) + (3000 * Variables.Fly.Aerial_Boost)) ) + Vector3.new(0, 300, 0)
+		BF.Force = ( workspace.CurrentCamera.CFrame.LookVector * (100 + (75 * Variables.Fly.Speed) + (3000 * Variables.Fly.Aerial_Boost)) ) + Vector3.new(0, 300  + (200 * Variables.Fly.Aerial_Boost), 0)
 		Animations.Helicopter:AdjustSpeed(Variables.Fly.Speed)
 		
 		local Magnitude = (HRP.AssemblyLinearVelocity - (BF.Force * 1)).Magnitude / 9425
@@ -137,7 +156,7 @@ local Render = RunService.PreRender:Connect(function(dT)
 			Variables.Fly.Last_CF *= CFrame.fromEulerAngles(math.rad(-99 * dT), 0, 0)
 		end
 		
-		HRP:PivotTo(CFrame.lookAt(HRP.Position, HRP.Position + workspace.CurrentCamera.CFrame.LookVector) * CFrame.fromEulerAngles(math.rad(-66), 0, 0))
+		--HRP:PivotTo(CFrame.lookAt(HRP.Position, HRP.Position + workspace.CurrentCamera.CFrame.LookVector) * CFrame.fromEulerAngles(math.rad(-66), 0, 0))
 		
 		--HRP:PivotTo(CFrame.new(HRP.Position) * CFrame.fromEulerAngles(X,Y,Z))
 	end
@@ -160,16 +179,6 @@ local Render = RunService.PreRender:Connect(function(dT)
 			
 			task.wait(.05 + Variables.BLJ.Jump_Delay / 3)
 			Animations.BLJ2:Stop(0)
-		end
-	end
-end)
-
-UserInputService.InputBegan:Connect(function(input: InputObject, gameProcessedEvent: boolean)  
-	if gameProcessedEvent == false then
-		for i,v in pairs(Actions) do
-			if i == input.KeyCode then
-				v()
-			end
 		end
 	end
 end)
@@ -197,6 +206,25 @@ local function RegisterCharacter(Character : Model)
 end
 
 RegisterCharacter(Character)
-Players.LocalPlayer.CharacterAdded:Connect(function(Char)
+local Spawn = Players.LocalPlayer.CharacterAdded:Connect(function(Char)
 	RegisterCharacter(Character)
+end)
+
+local Input
+	
+Input = UserInputService.InputBegan:Connect(function(input: InputObject, gameProcessedEvent: boolean)  
+	if gameProcessedEvent == false then
+		for i,v in pairs(Actions) do
+			if i == input.KeyCode then
+				v()
+			end
+		end
+		
+		if input.KeyCode == Enum.KeyCode.Equals then
+			Spawn:Disconnect()
+			Input:Disconnect()
+			Render:Disconnect()
+			Variables.Fly.Meter:Destroy()
+		end
+	end
 end)
