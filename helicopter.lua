@@ -1,4 +1,5 @@
 task.wait(1.5)
+local Done = false
 function RegisterCharacter()
 	local Upgrades = game:GetService("ReplicatedStorage"):WaitForChild("UpgradeFolder"):WaitForChild("Upgrades")
 	local Item_Pool = game.Workspace:WaitForChild("Item_Pools")
@@ -290,6 +291,7 @@ function RegisterCharacter()
 			end
 			
 			if game.UserInputService:IsKeyDown(Enum.KeyCode.Equals) or BF.Parent == nil then -- press = to disable the thing lolz
+				Done = true
 				C:Disconnect()
 				WillBreak = true -- AH MY LEGS THEY BROKE D;
 			end
@@ -302,7 +304,7 @@ function RegisterCharacter()
 
 end
 
-local C
+local C2
 local CC
 
 CC = game.UserInputService.InputBegan:Connect(function(input: InputObject, gameProcessedEvent: boolean) 
@@ -316,9 +318,14 @@ end)
 task.spawn(function()
 	RegisterCharacter()
 end)
-C = game.Players.LocalPlayer.CharacterAdded:Connect(function(character: Model)
-	task.spawn(function()
-		task.wait(1)
-		RegisterCharacter()
-	end)
+C2 = game.Players.LocalPlayer.CharacterAdded:Connect(function(character: Model)
+	if Done == true then
+		C2:Disconnect()
+	else
+		task.spawn(function()
+			task.wait(1)
+			RegisterCharacter()
+		end)
+	end
+
 end)
