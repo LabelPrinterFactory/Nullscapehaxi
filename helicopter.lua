@@ -1,4 +1,4 @@
-task.wait(1)
+task.wait(1.5)
 function RegisterCharacter()
 	local Upgrades = game:GetService("ReplicatedStorage"):WaitForChild("UpgradeFolder"):WaitForChild("Upgrades")
 	local Item_Pool = game.Workspace:WaitForChild("Item_Pools")
@@ -36,7 +36,8 @@ function RegisterCharacter()
 
 	local Hint = Instance.new("Hint",workspace)
 	Hint.Text = "loadign"
-
+	
+	local Overfuel = 0
 	local FlightDecay = 0
 
 	local matrix = false
@@ -46,9 +47,12 @@ function RegisterCharacter()
 	local sharktail = false
 	local adrenaline = false
 	local hourglass = false
-	local ninjabelt = false
-	local gracewings = false
-
+	local ninjabelt = true
+	local gracewings = true
+	
+	local Preloader = Instance.new("Sound",Plr)
+	Preloader.SoundId = "rbxassetid://15675059323"
+	
 	C = game:GetService("UserInputService").InputBegan:Connect(function(input: InputObject, gameProcessedEvent: boolean) 
 		if gameProcessedEvent then return end
 		if input.KeyCode == Enum.KeyCode.F then
@@ -66,8 +70,18 @@ function RegisterCharacter()
 				end
 			end
 		end
-		if input.KeyCode == Enum.KeyCode.R and Fuel > 4 and ninjabelt == true then
-			Fuel -= 4
+		if input.KeyCode == Enum.KeyCode.R and Fuel > 2+Overfuel and ninjabelt == true then
+			
+			local DashSound = Instance.new("Sound",Plr)
+			DashSound.PlaybackSpeed = 0.85+(Overfuel/2)
+			DashSound.Volume = 0.8+(Overfuel/25)
+			DashSound.SoundId = "rbxassetid://15675059323"
+			DashSound:Play()
+			game.Debris:AddItem(DashSound,3)
+			
+			Fuel -= 2+Overfuel
+			Plr.HumanoidRootPart.AssemblyLinearVelocity += Vector3.new(0,(Overfuel^2)/3,0)
+			Overfuel += 2
 			FlySpeed /= 3
 			local DashSpeed = 42
 			DashSpeed += (rings*3)
@@ -81,8 +95,7 @@ function RegisterCharacter()
 			FlightDecay += DashSpeed
 		end
 	end)
-
-
+	
 	while task.wait() do
 		local WillBreak = false
 		pcall(function(...) 
@@ -120,7 +133,11 @@ function RegisterCharacter()
 				idols = Upgrades:FindFirstChild("GiftIdol").Value
 			end
 			
-			local capacity = 100
+			
+			local capacity = 80
+			if ninjabelt == true then
+				capacity = 130
+			end
 			capacity += idols*2
 			
 			TargetThrottle = 9
@@ -156,8 +173,12 @@ function RegisterCharacter()
 				Flying = false
 			end
 
-			Hint.Text = "Fuel: ".. math.round(Fuel*100)/100 .."%"
-
+			Hint.Text = "Fuel: ".. math.round(Fuel*100)/100 .. "/"..capacity
+			
+			Overfuel /= 1+(DT/10)
+			Overfuel = math.clamp(Overfuel-DT,0,15)
+			
+			
 			local FlyThreshold = 0.03
 			
 			
@@ -184,11 +205,7 @@ function RegisterCharacter()
 				end
 				FlySpeed = math.lerp(FlySpeed,TargetThrottle,DT*Acceleration)
 				
-				if idols == 5 then
-					Fuel -= 10*(DT/7)
-				else
-					Fuel -= 10*(DT/6)
-				end
+				Fuel -= 10*(DT/6)
 			else
 				FlySpeed = math.lerp(FlySpeed,0,DT)
 				
@@ -231,7 +248,7 @@ function RegisterCharacter()
 				end
 
 				BF.Force = Plr.HumanoidRootPart.CFrame.UpVector * (FlySpeed+10)*50
-				BF.Force += workspace.CurrentCamera.CFrame.LookVector * (FlySpeed)*FowardSpeed
+				BF.Force += workspace.CurrentCamera.CFrame.LookVector * (FlySpeed)*(FowardSpeed)
 
 				Plr.HumanoidRootPart.AssemblyLinearVelocity /= Vector3.new(1+(DT*HorizontalDrag),1+(DT*(HorizontalDrag/2)),1+(DT*HorizontalDrag))
 			else
@@ -257,7 +274,11 @@ function RegisterCharacter()
 				TargetThrottle = math.clamp(TargetThrottle-(DT*5),1,10)
 			end
 		end--]]
-
+			
+			if capacity > ((250-150)*2)/2 then -- dont ask
+				capacity = 1
+			end
+			
 			if game.UserInputService:IsKeyDown(Enum.KeyCode.Equals) or BF.Parent == nil then -- press = to disable the thing lolz
 				C:Disconnect()
 				WillBreak = true -- AH MY LEGS THEY BROKE D;
