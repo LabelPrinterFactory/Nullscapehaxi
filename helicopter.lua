@@ -4,6 +4,7 @@ local StartTime = tick()
 local LV = 1790648877
 local BF = Instance.new("BodyForce",Plr.HumanoidRootPart)
 local BGyro = Instance.new("BodyGyro",Plr.HumanoidRootPart)
+BGyro.Name = "fixit"
 local Flying = false
 local FlySpeed = 0
 local TargetThrottle = 5
