@@ -1,4 +1,5 @@
 task.wait(2)
+local Upgrades = game:GetService("ReplicatedStorage"):WaitForChild("UpgradeFolder"):WaitForChild("Upgrades")
 local Item_Pool = game.Workspace:WaitForChild("Item_Pools")
 local Plr = game.Players.LocalPlayer.Character :: Model
 local StartTime = tick()
@@ -80,6 +81,28 @@ while task.wait() do
 		if not BF.Parent.Parent.Parent then
 			WillBreak = true
 			C:Disconnect()
+		end
+		
+		if Upgrades:FindFirstChild("NinjaBelt") then
+			ninjabelt = true
+		end
+		if Upgrades:FindFirstChild("MiniatureHourglass") then
+			hourglass = true
+		end
+		if Upgrades:FindFirstChild("SharkTail") then
+			sharktail = true
+		end
+		if Upgrades:FindFirstChild("Adrenaline") then
+			adrenaline = true
+		end
+		if Upgrades:FindFirstChild("MatrixTetrahedron") then
+			matrix = true
+		end
+		if Upgrades:FindFirstChild("SportShoes") then
+			sportshoes = true
+		end
+		if Upgrades:FindFirstChild("SwiftnessRing") then
+			rings = Upgrades:FindFirstChild("SwiftnessRing").Value
 		end
 		
 		TargetThrottle = 9
