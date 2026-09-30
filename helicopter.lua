@@ -39,6 +39,7 @@ function RegisterCharacter()
 	
 	local Overfuel = 0
 	local FlightDecay = 0
+	local LastTimeFly = 0
 
 	local matrix = false
 	local rings = 0
@@ -83,6 +84,7 @@ function RegisterCharacter()
 			Plr.HumanoidRootPart.AssemblyLinearVelocity += Vector3.new(0,(Overfuel^2)/3,0)
 			Overfuel += 2
 			FlySpeed /= 3
+			LastTimeFly = 0
 			local DashSpeed = 42
 			DashSpeed += (rings*3)
 			if adrenaline == true then
@@ -164,6 +166,9 @@ function RegisterCharacter()
 
 			if Flying == true then
 				DisableThreshold = 0
+				
+			else
+				
 			end
 
 			if Fuel <= DisableThreshold then
@@ -206,12 +211,13 @@ function RegisterCharacter()
 				FlySpeed = math.lerp(FlySpeed,TargetThrottle,DT*Acceleration)
 				
 				Fuel -= 10*(DT/6)
+				LastTimeFly = 0
 			else
 				FlySpeed = math.lerp(FlySpeed,0,DT)
-				
+				LastTimeFly += DT
 			end
-
 			
+			RegenSpeed *= 1 + (LastTimeFly/500) -- just to do it i guess?
 			
 			if FlightDecay > 0 then
 				local DecayAmount = (FlightDecay+5)*(DT/2)
@@ -262,6 +268,8 @@ function RegisterCharacter()
 				end
 				BGyro.MaxTorque = Vector3.zero
 			end
+			
+			RegenSpeed *= 1
 			
 			Fuel = math.clamp(Fuel+(DT*(RegenSpeed/1.5)),0,capacity)
 			HelicopterSound.PlaybackSpeed = FlySpeed/5
