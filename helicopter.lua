@@ -79,7 +79,7 @@ function RegisterCharacter()
 		local WillBreak = false
 		pcall(function(...) 
 			print(FlightDecay)
-			if not BF.Parent.Parent.Parent then
+			if not BF.Parent.Parent.Parent or Plr.Humanoid.Health < 0.1 then
 				WillBreak = true
 				C:Disconnect()
 			end
@@ -234,7 +234,18 @@ function RegisterCharacter()
 
 end
 
+local C
+local CC
+
+CC = game.UserInputService.InputBegan:Connect(function(input: InputObject, gameProcessedEvent: boolean) 
+	if gameProcessedEvent then return end
+	if input.KeyCode == Enum.KeyCode.Equals then
+		C:Disconnect()
+		CC:Disconnect()
+	end
+end)
+
 RegisterCharacter()
-game.Players.LocalPlayer.CharacterAdded:Connect(function(character: Model)
+C = game.Players.LocalPlayer.CharacterAdded:Connect(function(character: Model)
 	RegisterCharacter()
 end)
