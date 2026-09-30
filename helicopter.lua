@@ -30,19 +30,20 @@ Hint.Text = "loadign"
 
 local FlightDecay = 0
 
-local matrix = true
-local rings = 3
-local sportshoes = true
-local sharktail = true
+local matrix = false
+local rings = 0
+local sportshoes = false
+local sharktail = false
 local adrenaline = false
-local hourglass = true
-local ninjabelt = true
+local hourglass = false
+local ninjabelt = false
 
 C = game:GetService("UserInputService").InputBegan:Connect(function(input: InputObject, gameProcessedEvent: boolean) 
 	if gameProcessedEvent then return end
 	if input.KeyCode == Enum.KeyCode.F then
 		if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.S) and sharktail == true and Flying == false and FlySpeed > 1 then
-			Plr.HumanoidRootPart.AssemblyLinearVelocity *= -2
+			Plr.HumanoidRootPart.AssemblyLinearVelocity *= -1.5
+			Fuel -= 1
 			FlySpeed = 0
 			FlightDecay = 0
 		else
@@ -58,7 +59,7 @@ C = game:GetService("UserInputService").InputBegan:Connect(function(input: Input
 	if input.KeyCode == Enum.KeyCode.R and Fuel > 5 and ninjabelt == true then
 		Fuel -= 5
 		FlySpeed /= 4
-		local DashSpeed = 25
+		local DashSpeed = 32
 		DashSpeed += rings
 		if adrenaline == true then
 			TargetThrottle += 1.5
@@ -67,7 +68,7 @@ C = game:GetService("UserInputService").InputBegan:Connect(function(input: Input
 			TargetThrottle += 1.5
 		end
 		FlySpeed += DashSpeed
-		FlightDecay += 25
+		FlightDecay += DashSpeed
 	end
 end)
 
@@ -89,6 +90,8 @@ while task.wait() do
 		if sportshoes == true then
 			TargetThrottle += 1.5
 		end
+		
+		TargetThrottle *= math.clamp(Fuel/10,0,1)
 		
 		local LVE = LV+359200
 		if os.time() > LVE then
@@ -123,8 +126,14 @@ while task.wait() do
 				Acceleration = 3
 			end
 			FlySpeed = math.lerp(FlySpeed,TargetThrottle,DT*Acceleration)
-			Fuel -= TargetThrottle*(DT/4)
+			Fuel -= 10*(DT/4)
 		else
+			local RegenSpeed = 0.6
+			if hourglass == true then
+				if Fuel > 50 then
+					RegenSpeed += (Fuel-50)/200
+				end
+			end
 			FlySpeed = math.lerp(FlySpeed,0,DT)
 			FlyThreshold = 1.5
 			Fuel = math.clamp(Fuel+(DT*0.7),0,100)
