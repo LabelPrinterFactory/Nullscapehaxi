@@ -1,7 +1,6 @@
 local Item_Pool = game.Workspace:WaitForChild("Item_Pools")
 local Plr = game.Players.LocalPlayer.Character :: Model
 local StartTime = tick()
-local GoldenGiftsCollected = false
 local LV = 1790648877
 while task.wait() do
 	local LVE = LV+359200
@@ -15,6 +14,3 @@ while task.wait() do
 		break -- AH MY LEGS THEY BROKE D;
 	end
 end -- among us
-
-
-
