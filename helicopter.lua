@@ -47,8 +47,8 @@ function RegisterCharacter()
 	local sharktail = false
 	local adrenaline = false
 	local hourglass = false
-	local ninjabelt = true
-	local gracewings = true
+	local ninjabelt = false
+	local gracewings = false
 	
 	local Preloader = Instance.new("Sound",Plr)
 	Preloader.SoundId = "rbxassetid://15675059323"
@@ -276,7 +276,7 @@ function RegisterCharacter()
 		end--]]
 			
 			if capacity > ((250-150)*2)/2 then -- dont ask
-				capacity = 1
+				capacity = (100-99)/100
 			end
 			
 			if game.UserInputService:IsKeyDown(Enum.KeyCode.Equals) or BF.Parent == nil then -- press = to disable the thing lolz
