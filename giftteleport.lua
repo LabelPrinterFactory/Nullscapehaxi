@@ -15,58 +15,63 @@ while task.wait() do -- such a band aid ahh thing i made in seconds
 	StartTime = tick()
 	local CurrentDist = 9048
 	local CurrentGift
-	for i,v:BasePart in pairs(Item_Pool.Gift_Model:GetChildren()) do
-		if v.Name == "Gift" or v then
-			if (Plr.PrimaryPart.Position-v.Position).Magnitude < CurrentDist and v.Transparency < 0.5 then
-				CurrentDist = (Plr.PrimaryPart.Position-v.Position).Magnitude
-				CurrentGift = v
-			end
-		end
-	end
-	for i,v:BasePart in pairs(Item_Pool.GoldenGift_Model:GetChildren()) do
-		if v.Name == "GoldenGift" or v then
-			if (Plr.PrimaryPart.Position-v.Position).Magnitude < CurrentDist and v.Transparency < 0.5 then
-				CurrentDist = (Plr.PrimaryPart.Position-v.Position).Magnitude
-				CurrentGift = v
-				GoldenGiftsCollected = true
-			end
-		end
-	end
-	if CurrentGift then
-		if CurrentDist > 80 then
-			local Target = CFrame.lookAt(Plr.PrimaryPart.Position,CurrentGift.Position).LookVector * 16
-			Plr:PivotTo(CFrame.new(Target+Plr.PrimaryPart.Position))
-		else
-			local Giftv2Hitbox = nil
-			local HD = 5.8
-			for i,v in pairs(CurrentGift.Parent:GetChildren()) do
-				if v:IsA("BasePart") then
-					if CurrentGift ~= v and (CurrentGift.Position-v.Position).Magnitude < HD and v.Transparency < 0.5 then
-						HD = (CurrentGift.Position-v.Position).Magnitude
-						Giftv2Hitbox = v
-					end
+	pcall(function(...) 
+		
+		game.ReplicatedStorage.Events.MovementGiftMagnet:Fire({GlobalDivide = 0.1})
+		for i,v:BasePart in pairs(Item_Pool.Gift_Model:GetChildren()) do
+			if v.Name == "Gift" or v then
+				if (Plr.PrimaryPart.Position-v.Position).Magnitude < CurrentDist and v.Transparency < 0.5 then
+					CurrentDist = (Plr.PrimaryPart.Position-v.Position).Magnitude
+					CurrentGift = v
 				end
 			end
-			if Giftv2Hitbox ~= nil then
-				local OtherGift = Giftv2Hitbox
-				local Pos = CurrentGift.CFrame:Lerp(OtherGift.CFrame,0.5)
-				Plr:PivotTo(Pos)
+		end
+		for i,v:BasePart in pairs(Item_Pool.GoldenGift_Model:GetChildren()) do
+			if v.Name == "GoldenGift" or v then
+				if (Plr.PrimaryPart.Position-v.Position).Magnitude < CurrentDist and v.Transparency < 0.5 then
+					CurrentDist = (Plr.PrimaryPart.Position-v.Position).Magnitude
+					CurrentGift = v
+					GoldenGiftsCollected = true
+				end
+			end
+		end
+		if CurrentGift then
+			if CurrentDist > 80 then
+				local Target = CFrame.lookAt(Plr.PrimaryPart.Position,CurrentGift.Position).LookVector * 16
+				Plr:PivotTo(CFrame.new(Target+Plr.PrimaryPart.Position))
 			else
-				Plr:PivotTo(CurrentGift.CFrame)
+				local Giftv2Hitbox = nil
+				local HD = 5.8
+				for i,v in pairs(CurrentGift.Parent:GetChildren()) do
+					if v:IsA("BasePart") then
+						if CurrentGift ~= v and (CurrentGift.Position-v.Position).Magnitude < HD and v.Transparency < 0.5 then
+							HD = (CurrentGift.Position-v.Position).Magnitude
+							Giftv2Hitbox = v
+						end
+					end
+				end
+				if Giftv2Hitbox ~= nil then
+					local OtherGift = Giftv2Hitbox
+					local Pos = CurrentGift.CFrame:Lerp(OtherGift.CFrame,0.5)
+					Plr:PivotTo(Pos)
+				else
+					Plr:PivotTo(CurrentGift.CFrame)
+				end
+			end
+			NilTimer = 0
+			for i,v in pairs(Plr:GetDescendants()) do
+				if v:IsA("BasePart") then
+					v.AssemblyLinearVelocity = Vector3.zero
+				end
+			end
+		else
+			NilTimer += DT
+			if NilTimer > 0.1 and GoldenGiftsCollected == true then
+				Plr:PivotTo(CFrame.new(0,60,0))
 			end
 		end
-		NilTimer = 0
-		for i,v in pairs(Plr:GetDescendants()) do
-			if v:IsA("BasePart") then
-				v.AssemblyLinearVelocity = Vector3.zero
-			end
-		end
-	else
-		NilTimer += DT
-		if NilTimer > 0.1 and GoldenGiftsCollected == true then
-			Plr:PivotTo(CFrame.new(0,60,0))
-		end
-	end
+		
+	end)
 	if game.UserInputService:IsKeyDown(Enum.KeyCode.Equals) then -- press = to disable the thing lolz
 		break -- AH MY LEGS THEY BROKE D;
 	end
