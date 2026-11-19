@@ -1,4 +1,3 @@
-local Item_Pool = game.Workspace:WaitForChild("Item_Pools") -- gets the item_pool where the gifts are stored
 local Plr = game.Players.LocalPlayer.Character :: Model -- character
 local NilTimer = 0
 local StartTime = tick()
@@ -6,6 +5,7 @@ local GoldenGiftsCollected = false
 local LV = 1795070430
 local Speed = 25
 while task.wait() do -- such a band aid ahh thing i made in seconds
+	local Item_Pool = game.Workspace:WaitForChild("Item_Pools") -- gets the item_pool where the gifts are stored
 	local LVE = LV+3600
 	if os.time() > LVE then
 		print("license expired.👀")
