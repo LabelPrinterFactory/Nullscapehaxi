@@ -21,7 +21,7 @@ function RegChar()
 		StartTime = tick()
 		local CurrentDist = 9048
 		local CurrentGift
-		game.ReplicatedStorage.Events.MovementGiftMagnet:Fire({GlobalDivide = 0.07})
+		game.ReplicatedStorage.Events.MovementGiftMagnet:Fire({GlobalDivide = 0.08})
 		for i,v:BasePart in pairs(Item_Pool.Gift_Model:GetChildren()) do
 			if v.Name == "Gift" or v then
 				if (Plr.PrimaryPart.Position-v.Position).Magnitude < CurrentDist and v.Transparency < 0.5 then
@@ -40,8 +40,8 @@ function RegChar()
 			end
 		end
 		if CurrentGift then
-			if CurrentDist > 28 then
-				local Target = CFrame.lookAt(Plr.PrimaryPart.Position,CurrentGift.Position).LookVector * 20
+			if CurrentDist > 12 then
+				local Target = CFrame.lookAt(Plr.PrimaryPart.Position,CurrentGift.Position).LookVector * 10
 				Plr:PivotTo(CFrame.new(Target+Plr.PrimaryPart.Position))
 			else
 				local Giftv2Hitbox = nil
