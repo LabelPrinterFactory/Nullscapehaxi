@@ -20,16 +20,8 @@ function RegChar()
 		for i,v:BasePart in pairs(Item_Pool.Gift_Model:GetChildren()) do
 			if v.Name == "Gift" or v then
 				if (Plr.PrimaryPart.Position-v.Position).Magnitude < CurrentDist and v.Transparency < 0.5 then
-					if not v:FindFirstChild("LifeTime") then
-						local LifeTime = Instance.new("NumberValue",v)
-						LifeTime.Name = "LifeTime"
-					else
-						v.LifeTine.Value += DT
-						if v.LifeTime.Value > 1.2 then
-							CurrentDist = (Plr.PrimaryPart.Position-v.Position).Magnitude
-							CurrentGift = v
-						end
-					end
+					CurrentDist = (Plr.PrimaryPart.Position-v.Position).Magnitude
+					CurrentGift = v
 				end
 			end
 		end
@@ -43,8 +35,8 @@ function RegChar()
 			end
 		end
 		if CurrentGift then
-			if CurrentDist > 48 then
-				local Target = CFrame.lookAt(Plr.PrimaryPart.Position,CurrentGift.Position).LookVector * 40
+			if CurrentDist > 38 then
+				local Target = CFrame.lookAt(Plr.PrimaryPart.Position,CurrentGift.Position).LookVector * 30
 				Plr:PivotTo(CFrame.new(Target+Plr.PrimaryPart.Position))
 			else
 				local Giftv2Hitbox = nil
