@@ -1,3 +1,8 @@
+local notifStuff = {	
+	Title = "Hello",
+}
+game:GetService("GuiService"):SendNotification(notifStuff)
+
 function RegChar()
 	local Item_Pool = game.Workspace:WaitForChild("Item_Pools") -- gets the item_pool where the gifts are stored
 	local Plr = game.Players.LocalPlayer.Character :: Model -- character
@@ -84,6 +89,10 @@ CC = game.UserInputService.InputBegan:Connect(function(input: InputObject, gameP
 	if input.KeyCode == Enum.KeyCode.Equals then
 		CC:Disconnect()
 		C2:Disconnect()
+		local notifStuff = {	
+			Title = "Bye",
+		}
+		game:GetService("GuiService"):SendNotification(notifStuff)
 	end
 end)
 
