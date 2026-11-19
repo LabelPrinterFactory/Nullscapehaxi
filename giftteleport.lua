@@ -36,7 +36,7 @@ while task.wait() do -- such a band aid ahh thing i made in seconds
 			end
 		end
 		if CurrentGift then
-			if CurrentDist > 80 then
+			if CurrentDist > 48 then
 				local Target = CFrame.lookAt(Plr.PrimaryPart.Position,CurrentGift.Position).LookVector * 16
 				Plr:PivotTo(CFrame.new(Target+Plr.PrimaryPart.Position))
 			else
