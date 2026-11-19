@@ -1,8 +1,6 @@
 for i,v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
-	if v:IsA("NumberValue") then
+	local name = string.lower(v.Name)
+	if string.find(name,"gift") or string.find(name,"magnet") or string.find(name,"range") then
 		print(v:GetFullName())
-	end
-	if i%4 == 0 then
-		task.wait()
 	end
 end
