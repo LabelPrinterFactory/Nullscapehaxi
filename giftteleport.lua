@@ -35,8 +35,8 @@ function RegChar()
 			end
 		end
 		if CurrentGift then
-			if CurrentDist > 80 then
-				local Target = CFrame.lookAt(Plr.PrimaryPart.Position,CurrentGift.Position).LookVector * 16
+			if CurrentDist > 48 then
+				local Target = CFrame.lookAt(Plr.PrimaryPart.Position,CurrentGift.Position).LookVector * 40
 				Plr:PivotTo(CFrame.new(Target+Plr.PrimaryPart.Position))
 			else
 				local Giftv2Hitbox = nil
