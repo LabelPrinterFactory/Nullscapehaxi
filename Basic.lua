@@ -1,4 +1,6 @@
-local Upgrades = game:GetService("ReplicatedStorage"):WaitForChild("UpgradeFolder"):WaitForChild("Upgrades")
-local Magnet = Instance.new("IntValue",Upgrades)
-Magnet.Name = "GiftMagnet"
-Magnet.Value = 100
+for i,v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+	local name = string.lower(v.Name)
+	if string.find(name,"gift") or string.find(name,"magnet") or string.find(name,"range") or string.find(name,"col") or string.find(name,"radius") then
+		print(v:GetFullName())
+	end
+end
