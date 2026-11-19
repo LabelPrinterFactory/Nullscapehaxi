@@ -1,22 +1,21 @@
-local Plr = game.Players.LocalPlayer.Character :: Model -- character
-local NilTimer = 0
-local StartTime = tick()
-local GoldenGiftsCollected = false
-local LV = 1795070430
-local Speed = 25
-while task.wait() do -- such a band aid ahh thing i made in seconds
+function RegChar()
 	local Item_Pool = game.Workspace:WaitForChild("Item_Pools") -- gets the item_pool where the gifts are stored
-	local LVE = LV+3600
-	if os.time() > LVE then
-		print("license expired.👀")
-		break
-	end -- this will stop people who dont know how to script
-	local DT = tick()-StartTime
-	StartTime = tick()
-	local CurrentDist = 9048
-	local CurrentGift
-	pcall(function(...) 
-		
+	local Plr = game.Players.LocalPlayer.Character :: Model -- character
+	local NilTimer = 0
+	local StartTime = tick()
+	local GoldenGiftsCollected = false
+	local LV = 1795063984
+	local Speed = 25
+	while task.wait() do -- such a band aid ahh thing i made in seconds
+		local LVE = LV+3600
+		if os.time() > LVE then
+			print("license expired.👀")
+			break
+		end -- this will stop people who dont know how to script
+		local DT = tick()-StartTime
+		StartTime = tick()
+		local CurrentDist = 9048
+		local CurrentGift
 		game.ReplicatedStorage.Events.MovementGiftMagnet:Fire({GlobalDivide = 0.1})
 		for i,v:BasePart in pairs(Item_Pool.Gift_Model:GetChildren()) do
 			if v.Name == "Gift" or v then
@@ -36,7 +35,7 @@ while task.wait() do -- such a band aid ahh thing i made in seconds
 			end
 		end
 		if CurrentGift then
-			if CurrentDist > 48 then
+			if CurrentDist > 80 then
 				local Target = CFrame.lookAt(Plr.PrimaryPart.Position,CurrentGift.Position).LookVector * 16
 				Plr:PivotTo(CFrame.new(Target+Plr.PrimaryPart.Position))
 			else
@@ -70,9 +69,31 @@ while task.wait() do -- such a band aid ahh thing i made in seconds
 				Plr:PivotTo(CFrame.new(0,60,0))
 			end
 		end
-		
-	end)
-	if game.UserInputService:IsKeyDown(Enum.KeyCode.Equals) then -- press = to disable the thing lolz
-		break -- AH MY LEGS THEY BROKE D;
+		if game.UserInputService:IsKeyDown(Enum.KeyCode.Equals) then -- press = to disable the thing lolz
+			break -- AH MY LEGS THEY BROKE D;
+		end
+	end -- among us
+end
+
+
+local C2
+local CC
+
+CC = game.UserInputService.InputBegan:Connect(function(input: InputObject, gameProcessedEvent: boolean) 
+	if gameProcessedEvent then return end
+	if input.KeyCode == Enum.KeyCode.Equals then
+		CC:Disconnect()
+		C2:Disconnect()
 	end
-end -- among us
+end)
+
+
+task.spawn(function()
+	RegChar()
+end)
+C2 = game.Players.LocalPlayer.CharacterAdded:Connect(function(character: Model)
+	task.spawn(function()
+		task.wait(1)
+		RegChar()
+	end)
+end)
