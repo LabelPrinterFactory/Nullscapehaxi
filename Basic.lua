@@ -1,1 +1,1 @@
-game.ReplicatedStorage.Events.MovementGiftMagnet:Fire({Multiplier = 3})
+game.ReplicatedStorage.Events.MovementGiftMagnet:Fire({GlobalDivide = 0.1})
