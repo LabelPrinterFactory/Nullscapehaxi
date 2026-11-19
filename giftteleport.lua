@@ -20,8 +20,16 @@ function RegChar()
 		for i,v:BasePart in pairs(Item_Pool.Gift_Model:GetChildren()) do
 			if v.Name == "Gift" or v then
 				if (Plr.PrimaryPart.Position-v.Position).Magnitude < CurrentDist and v.Transparency < 0.5 then
-					CurrentDist = (Plr.PrimaryPart.Position-v.Position).Magnitude
-					CurrentGift = v
+					if not v:FindFirstChild("LifeTime") then
+						local LifeTime = Instance.new("NumberValue",v)
+						LifeTime.Name = "LifeTime"
+					else
+						v.LifeTine.Value += DT
+						if v.LifeTime.Value > 1.2 then
+							CurrentDist = (Plr.PrimaryPart.Position-v.Position).Magnitude
+							CurrentGift = v
+						end
+					end
 				end
 			end
 		end
