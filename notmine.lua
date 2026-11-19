@@ -1,1 +1,2 @@
-loadstring(game:HttpGet("https://raw.githubusercontent.com/B4L13R/BALL3RHUB/refs/heads/main/BALL3RHUB%20script", true))()
+loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Dex-Explorer-not-mine-33056"))() 
+loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Simple-Spy-32021"))()
