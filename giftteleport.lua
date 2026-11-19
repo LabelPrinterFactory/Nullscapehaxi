@@ -15,7 +15,7 @@ while task.wait() do -- such a band aid ahh thing i made in seconds
 	StartTime = tick()
 	local CurrentDist = 9048
 	local CurrentGift
-	for i,v:BasePart in pairs(Item_Pool.Gift:GetChildren()) do
+	for i,v:BasePart in pairs(Item_Pool.Gift_Model:GetChildren()) do
 		if v.Name == "Gift" or v then
 			if (Plr.PrimaryPart.Position-v.Position).Magnitude < CurrentDist and v.Transparency < 0.5 then
 				CurrentDist = (Plr.PrimaryPart.Position-v.Position).Magnitude
@@ -23,7 +23,7 @@ while task.wait() do -- such a band aid ahh thing i made in seconds
 			end
 		end
 	end
-	for i,v:BasePart in pairs(Item_Pool.GoldenGift:GetChildren()) do
+	for i,v:BasePart in pairs(Item_Pool.GoldenGift_Model:GetChildren()) do
 		if v.Name == "GoldenGift" or v then
 			if (Plr.PrimaryPart.Position-v.Position).Magnitude < CurrentDist and v.Transparency < 0.5 then
 				CurrentDist = (Plr.PrimaryPart.Position-v.Position).Magnitude
