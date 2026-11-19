@@ -1,1 +1,4 @@
-game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 64
+for i, v in pairs(workspace:GetChildren()) do
+	print(v)
+	task.wait()
+end
