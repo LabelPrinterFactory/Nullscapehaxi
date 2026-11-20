@@ -84,11 +84,11 @@ game:GetService("RunService"):BindToRenderStep("WalkSpd",Enum.RenderPriority.Cha
 	local Plr = game.Players.LocalPlayer.Character :: Model -- character
 	local Human = Plr:FindFirstChild("Humanoid") :: Humanoid
 	if Human.FloorMaterial == Enum.Material.Air then
-		SpeedAddition /= 1 + (DT/6)
+		SpeedAddition /= 1 + (DT*1)
 	else
-		SpeedAddition /= 1 + (DT/2)
+		SpeedAddition /= 1 + (DT*3)
 	end
-	Human.WalkSpeed += SpeedAddition
+	Human.WalkSpeed += SpeedAddition/2
 end)
 
 CC = game.UserInputService.InputBegan:Connect(function(input: InputObject, gameProcessedEvent: boolean) 
