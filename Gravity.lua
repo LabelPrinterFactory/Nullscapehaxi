@@ -3,6 +3,8 @@ local notifStuff = {
 }
 game:GetService("GuiService"):SendNotification(notifStuff)
 
+local SpeedAddition = 0
+
 function RegChar()
 	
 	
@@ -50,11 +52,14 @@ function RegChar()
 			ForceAddition *= 30000
 			local AltForceAddition = Vector3.zero
 			if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.F) then
-				AltForceAddition = dir.Unit / ((dir.Magnitude)+120)
+				AltForceAddition = dir.Unit / ((dir.Magnitude)+180)
 				AltForceAddition *= 400000
 			end
 			MagnetAdd += ForceAddition.Magnitude/1000
-			MagnetAdd += AltForceAddition.Magnitude/3000
+			MagnetAdd += AltForceAddition.Magnitude/6000
+			
+			SpeedAddition += ForceAddition.Magnitude/1000
+			SpeedAddition += AltForceAddition.Magnitude/750
 			if Plr.Humanoid.FloorMaterial ~= Enum.Material.Air then
 				ForceAddition *= 5
 			end
@@ -75,11 +80,23 @@ end
 local C2
 local CC
 
+game:GetService("RunService"):BindToRenderStep("WalkSpd",Enum.RenderPriority.Character.Value+2,function(DT)
+	local Plr = game.Players.LocalPlayer.Character :: Model -- character
+	local Human = Plr:FindFirstChild("Humanoid") :: Humanoid
+	if Human.FloorMaterial == Enum.Material.Air then
+		SpeedAddition /= 1 + (DT/6)
+	else
+		SpeedAddition /= 1 + (DT/2)
+	end
+	Human.WalkSpeed += SpeedAddition
+end)
+
 CC = game.UserInputService.InputBegan:Connect(function(input: InputObject, gameProcessedEvent: boolean) 
 	if gameProcessedEvent then return end
 	if input.KeyCode == Enum.KeyCode.Equals then
 		CC:Disconnect()
 		C2:Disconnect()
+		game:GetService("RunService"):UnbindFromRenderStep("WalkSpd")
 		local notifStuff = {	
 			Title = "Bye",
 		}
