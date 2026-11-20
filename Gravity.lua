@@ -50,7 +50,7 @@ function RegChar()
 		if CurrentGift then
 			local dir = (CurrentGift.CFrame.Position-Plr.HumanoidRootPart.Position) :: Vector3
 			local ForceAddition = dir.Unit / ((dir.Magnitude)+20)
-			ForceAddition *= 40000
+			ForceAddition *= 32000
 			local AltForceAddition = Vector3.zero
 			if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.F) then
 				AltForceAddition = dir.Unit / ((dir.Magnitude)+180)
@@ -63,7 +63,7 @@ function RegChar()
 			CurrentSpeedAdd += (AltForceAddition.Magnitude)/750
 			
 			if Plr.Humanoid.FloorMaterial ~= Enum.Material.Air then
-				ForceAddition *= 7
+				ForceAddition *= 6
 			end
 			CurrentForce += (ForceAddition+AltForceAddition)*Vector3.new(1,0.5,1)
 		end
@@ -72,7 +72,7 @@ function RegChar()
 		
 		BodyForce.Force = CurrentForce+Vector3.new(0,200,0)
 		
-		local SpeedAddMult = Plr.HumanoidRootPart.AssemblyLinearVelocity.Unit:Dot(BodyForce.Force.Unit)
+		local SpeedAddMult = Plr.HumanoidRootPart.AssemblyLinearVelocity.Unit:Dot(CurrentForce.Unit)
 
 		if SpeedAddMult ~= SpeedAddMult then
 			SpeedAddMult = 0
