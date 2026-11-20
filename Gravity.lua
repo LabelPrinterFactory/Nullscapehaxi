@@ -54,13 +54,14 @@ function RegChar()
 				AltForceAddition *= 400000
 			end
 			MagnetAdd += ForceAddition.Magnitude/1000
+			MagnetAdd += AltForceAddition.Magnitude/3000
 			if Plr.Humanoid.FloorMaterial ~= Enum.Material.Air then
 				ForceAddition *= 5
 			end
 			CurrentForce += (ForceAddition+AltForceAddition)*Vector3.new(1,0.5,1)
 		end
 		
-		game.ReplicatedStorage.Events.MovementGiftMagnet:Fire({Add = MagnetAdd, Squish = 1+MagnetAdd})
+		game.ReplicatedStorage.Events.MovementGiftMagnet:Fire({Add = MagnetAdd, Squish = 1+(MagnetAdd/2)})
 		
 		BodyForce.Force = CurrentForce+Vector3.new(0,200,0)
 		
