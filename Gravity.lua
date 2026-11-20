@@ -28,6 +28,7 @@ function RegChar()
 		local CurrentForce = Vector3.zero
 		local CurrentDist = 512
 		local MagnetAdd = 0
+		local CurrentSpeedAdd = 0
 		local CurrentGift
 		for i,v:BasePart in pairs(Item_Pool.Gift_Model:GetChildren()) do
 			if v.Name == "Gift" or v then
@@ -58,8 +59,9 @@ function RegChar()
 			MagnetAdd += ForceAddition.Magnitude/1000
 			MagnetAdd += AltForceAddition.Magnitude/6000
 			
-			SpeedAddition += ForceAddition.Magnitude/1000
-			SpeedAddition += AltForceAddition.Magnitude/750
+			CurrentSpeedAdd += (ForceAddition.Magnitude)/1000
+			CurrentSpeedAdd += (AltForceAddition.Magnitude)/750
+			
 			if Plr.Humanoid.FloorMaterial ~= Enum.Material.Air then
 				ForceAddition *= 5
 			end
@@ -69,6 +71,15 @@ function RegChar()
 		game.ReplicatedStorage.Events.MovementGiftMagnet:Fire({Add = MagnetAdd, Squish = 1+(MagnetAdd/2)})
 		
 		BodyForce.Force = CurrentForce+Vector3.new(0,200,0)
+		
+		local SpeedAddMult = Plr.HumanoidRootPart.AssemblyLinearVelocity.Unit:Dot(BodyForce.Force.Unit)
+
+		if SpeedAddMult ~= SpeedAddMult then
+			SpeedAddMult = 0
+		end
+		
+		SpeedAddition += CurrentSpeedAdd*SpeedAddMult
+		print(SpeedAddMult)
 		
 		if game.UserInputService:IsKeyDown(Enum.KeyCode.Equals) then -- press = to disable the thing lolz
 			break -- AH MY LEGS THEY BROKE D;
