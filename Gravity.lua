@@ -25,8 +25,8 @@ function RegChar()
 		StartTime = tick()
 		local CurrentForce = Vector3.zero
 		local CurrentDist = 512
+		local MagnetAdd = 0
 		local CurrentGift
-		game.ReplicatedStorage.Events.MovementGiftMagnet:Fire({GlobalDivide = 0.08})
 		for i,v:BasePart in pairs(Item_Pool.Gift_Model:GetChildren()) do
 			if v.Name == "Gift" or v then
 				if (Plr.PrimaryPart.Position-v.Position).Magnitude < CurrentDist and v.Transparency < 0.5 then
@@ -46,10 +46,16 @@ function RegChar()
 		end
 		if CurrentGift then
 			local dir = (CurrentGift.CFrame.Position-Plr.HumanoidRootPart.Position) :: Vector3
-			local ForceAddition = dir.Unit / ((dir.Magnitude^1.6)+1)
-			ForceAddition *= 15
+			local ForceAddition = dir.Unit / ((dir.Magnitude)+5)
+			ForceAddition *= 15000
+			MagnetAdd += ForceAddition/1000
+			if Plr.Humanoid.FloorMaterial ~= Enum.Material.Air then
+				ForceAddition *= 5
+			end
 			CurrentForce += ForceAddition
 		end
+		
+		game.ReplicatedStorage.Events.MovementGiftMagnet:Fire({Add = MagnetAdd})
 		
 		BodyForce.Force = CurrentForce
 		
