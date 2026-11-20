@@ -46,18 +46,23 @@ function RegChar()
 		end
 		if CurrentGift then
 			local dir = (CurrentGift.CFrame.Position-Plr.HumanoidRootPart.Position) :: Vector3
-			local ForceAddition = dir.Unit / ((dir.Magnitude)+5)
-			ForceAddition *= 20000
+			local ForceAddition = dir.Unit / ((dir.Magnitude)+20)
+			ForceAddition *= 30000
+			local AltForceAddition = 0
+			if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.F) then
+				local AltForceAddition = dir.Unit / ((dir.Magnitude)+60)
+				AltForceAddition *= 200000
+			end
 			MagnetAdd += ForceAddition.Magnitude/1000
 			if Plr.Humanoid.FloorMaterial ~= Enum.Material.Air then
-				ForceAddition *= 10
+				ForceAddition *= 5
 			end
-			CurrentForce += ForceAddition*Vector3.new(1,0.4,1)
+			CurrentForce += (ForceAddition+AltForceAddition)*Vector3.new(1,1,1)
 		end
 		
 		game.ReplicatedStorage.Events.MovementGiftMagnet:Fire({Add = MagnetAdd})
 		
-		BodyForce.Force = CurrentForce+Vector3.new(0,600,0)
+		BodyForce.Force = CurrentForce+Vector3.new(0,500,0)
 		
 		if game.UserInputService:IsKeyDown(Enum.KeyCode.Equals) then -- press = to disable the thing lolz
 			break -- AH MY LEGS THEY BROKE D;
