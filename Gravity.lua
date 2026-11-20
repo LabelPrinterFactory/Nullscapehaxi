@@ -48,9 +48,9 @@ function RegChar()
 			local dir = (CurrentGift.CFrame.Position-Plr.HumanoidRootPart.Position) :: Vector3
 			local ForceAddition = dir.Unit / ((dir.Magnitude)+20)
 			ForceAddition *= 30000
-			local AltForceAddition = 0
+			local AltForceAddition = Vector3.zero
 			if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.F) then
-				local AltForceAddition = dir.Unit / ((dir.Magnitude)+60)
+				AltForceAddition = dir.Unit / ((dir.Magnitude)+60)
 				AltForceAddition *= 200000
 			end
 			MagnetAdd += ForceAddition.Magnitude/1000
