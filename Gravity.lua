@@ -48,7 +48,7 @@ function RegChar()
 			local dir = (CurrentGift.CFrame.Position-Plr.HumanoidRootPart.Position) :: Vector3
 			local ForceAddition = dir.Unit / ((dir.Magnitude)+5)
 			ForceAddition *= 15000
-			MagnetAdd += ForceAddition/1000
+			MagnetAdd += ForceAddition.Magnitude/1000
 			if Plr.Humanoid.FloorMaterial ~= Enum.Material.Air then
 				ForceAddition *= 5
 			end
