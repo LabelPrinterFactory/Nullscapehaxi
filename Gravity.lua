@@ -101,7 +101,7 @@ game:GetService("RunService"):BindToRenderStep("WalkSpd",Enum.RenderPriority.Cha
 	else
 		SpeedAddition /= 1 + (DT*1.2)
 	end
-	Human.WalkSpeed += math.clamp(SpeedAddition-10,0,256)
+	Human.WalkSpeed += math.clamp(SpeedAddition-5,0,256)
 end)
 
 CC = game.UserInputService.InputBegan:Connect(function(input: InputObject, gameProcessedEvent: boolean) 
