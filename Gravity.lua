@@ -5,16 +5,18 @@ game:GetService("GuiService"):SendNotification(notifStuff)
 
 local SpeedAddition = 0
 
+local BodyForce
+
 function RegChar()
-	
-	
+
+
 	local Item_Pool = game.Workspace:WaitForChild("Item_Pools") -- gets the item_pool where the gifts are stored
 	local Plr = game.Players.LocalPlayer.Character :: Model -- character
 	local StartTime = tick()
 	local GoldenGiftsCollected = false
 	local LV = 1795151673
 	local Speed = 25
-	local BodyForce = Instance.new("BodyForce",Plr:FindFirstChild("HumanoidRootPart"))
+	BodyForce = Instance.new("BodyForce",Plr:FindFirstChild("HumanoidRootPart"))
 	BodyForce.Force = Vector3.zero
 	BodyForce.Name = "gravitron"
 	while task.wait(0.05) do -- such a band aid ahh thing i made in seconds
@@ -58,29 +60,29 @@ function RegChar()
 			end
 			MagnetAdd += ForceAddition.Magnitude/1000
 			MagnetAdd += AltForceAddition.Magnitude/6000
-			
+
 			CurrentSpeedAdd += (ForceAddition.Magnitude)/1000
 			CurrentSpeedAdd += (AltForceAddition.Magnitude)/750
-			
+
 			if Plr.Humanoid.FloorMaterial ~= Enum.Material.Air then
 				ForceAddition *= 6
 			end
 			CurrentForce += (ForceAddition+AltForceAddition)*Vector3.new(1,0.5,1)
 		end
-		
+
 		game.ReplicatedStorage.Events.MovementGiftMagnet:Fire({Add = MagnetAdd, Squish = 1+(MagnetAdd/2)})
-		
+
 		BodyForce.Force = CurrentForce+Vector3.new(0,200,0)
-		
+
 		local SpeedAddMult = Plr.HumanoidRootPart.AssemblyLinearVelocity.Unit:Dot(CurrentForce.Unit)
 
 		if SpeedAddMult ~= SpeedAddMult then
 			SpeedAddMult = 0
 		end
-		
+
 		SpeedAddition += CurrentSpeedAdd*SpeedAddMult
 		print(SpeedAddMult)
-		
+
 		if game.UserInputService:IsKeyDown(Enum.KeyCode.Equals) then -- press = to disable the thing lolz
 			break -- AH MY LEGS THEY BROKE D;
 		end
@@ -107,6 +109,11 @@ CC = game.UserInputService.InputBegan:Connect(function(input: InputObject, gameP
 	if input.KeyCode == Enum.KeyCode.Equals then
 		CC:Disconnect()
 		C2:Disconnect()
+		if BodyForce ~= nil then
+			BodyForce:Destroy()
+			BodyForce = nil
+		end
+		BodyForce = nil
 		game:GetService("RunService"):UnbindFromRenderStep("WalkSpd")
 		local notifStuff = {	
 			Title = "Bye",
