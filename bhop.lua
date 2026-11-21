@@ -6,7 +6,7 @@ game:GetService("GuiService"):SendNotification(notifStuff)
 local SpeedAddition = 0
 
 function RegChar()
-
+	
 
 	local Item_Pool = game.Workspace:WaitForChild("Item_Pools") -- gets the item_pool where the gifts are stored
 	local Plr = game.Players.LocalPlayer.Character :: Model -- character
@@ -15,18 +15,22 @@ function RegChar()
 	local GoldenGiftsCollected = false
 	local LV = 1795151673
 	local Speed = 25
+	local LastMoveDir = Humanoid.MoveDirection
 	while game:GetService("RunService").RenderStepped:Wait() do -- such a band aid ahh thing i made in seconds
 		local DT = tick()-StartTime
 		StartTime = tick()
 		
 		
 		if Humanoid then
+			local MoveDirUnit = LastMoveDir:Dot(Humanoid.MoveDirection)
+			LastMoveDir = Humanoid.MoveDirection
+			print(MoveDirUnit)
 			if Humanoid.FloorMaterial == Enum.Material.Air then
 				SpeedAddition += DT
 			end
 		end
 		
-		game.ReplicatedStorage.Events.MovementGiftMagnet:Fire({Add = SpeedAddition/10, Squish = 1+(SpeedAddition/10)})
+		game.ReplicatedStorage.Events.MovementGiftMagnet:Fire({Add = SpeedAddition/100, Squish = 1+(SpeedAddition/100)})
 
 		if game.UserInputService:IsKeyDown(Enum.KeyCode.Equals) then -- press = to disable the thing lolz
 			break -- AH MY LEGS THEY BROKE D;
