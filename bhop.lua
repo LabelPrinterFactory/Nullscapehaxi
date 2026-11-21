@@ -54,7 +54,7 @@ function RegChar()
 			end
 		end
 
-		game.ReplicatedStorage.Events.MovementGiftMagnet:Fire({Add = SpeedAddition/50, Squish = 1+(SpeedAddition/25)})
+		game.ReplicatedStorage.Events.MovementGiftMagnet:Fire({Add = SpeedAddition/35, Squish = 1+(SpeedAddition/20)})
 
 		if game.UserInputService:IsKeyDown(Enum.KeyCode.Equals) then -- press = to disable the thing lolz
 			break -- AH MY LEGS THEY BROKE D;
@@ -97,10 +97,14 @@ end)
 game:GetService("RunService"):BindToRenderStep("WalkSpd",Enum.RenderPriority.Character.Value+2,function(DT)
 	local Plr = game.Players.LocalPlayer.Character :: Model -- character
 	local Human = Plr:FindFirstChild("Humanoid") :: Humanoid
+	local DragMult = 1
+	if Upgrades:FindFirstChild("MiniatureHourglass") then
+		DragMult = 0.6
+	end
 	if Human.FloorMaterial == Enum.Material.Air then
-		SpeedAddition /= 1 + (DT*0.15)
+		SpeedAddition /= 1 + ((DT*DragMult)*0.15)
 	else
-		SpeedAddition /= 1 + (DT*2.4)
+		SpeedAddition /= 1 + ((DT*DragMult)*2.4)
 	end
 	Human.WalkSpeed += math.clamp(SpeedAddition-1,0,556)
 end)
