@@ -30,21 +30,22 @@ function RegChar()
 				DotToVelocity = 0
 			end
 			DotToVelocity += 1
-			BodyForce.Force = (Humanoid.MoveDirection*(2-DotToVelocity))*1000
 			
 			local MoveDirUnit = LastMoveDir:Dot(Humanoid.MoveDirection)
 			LastMoveDir = Humanoid.MoveDirection
 			local TurnThisFrame = (1-MoveDirUnit)/DT
-			print(TurnThisFrame)
 
 			local SpeedLossThreshold = 0.2
 			local SpeedGain = 400
+			local BFTurnForce = 1000
 			if Upgrades:FindFirstChild("MatrixTetrahedron") then
-				SpeedLossThreshold = 0.3
+				SpeedLossThreshold = 0.6
+				SpeedGain = 2000
+				BFTurnForce = 2500
 			end
+			BodyForce.Force = (Humanoid.MoveDirection*(2-DotToVelocity))*BFTurnForce
 			if Upgrades:FindFirstChild("SportShoes") then
-				SpeedLossThreshold = 0.3
-				SpeedGain = 500
+				SpeedGain *= 1.25
 			end
 
 			local SpeedAddMult = math.clamp(TurnThisFrame,0,0.1)*SpeedGain
@@ -81,12 +82,12 @@ CIn = game:GetService("UserInputService").InputBegan:Connect(function(input: Inp
 				if Shark == false then
 					game.Players.LocalPlayer.Character.HumanoidRootPart.AssemblyLinearVelocity += (game.Players.LocalPlayer.Character.Humanoid.MoveDirection+Vector3.new(0,0.02,0)) * (SpeedAddition*3)
 				SpeedAddition /= 5
-				game.ReplicatedStorage.Events.MovementGiftMagnet:Fire({DiverAdd = 1 + (SpeedAddition/100)})
+				game.ReplicatedStorage.Events.MovementGiftMagnet:Fire({DiverAdd = 3 + (SpeedAddition/50)})
 			else
 				game.Players.LocalPlayer.Character.HumanoidRootPart.AssemblyLinearVelocity /= Vector3.new(1,10,1)
-					game.Players.LocalPlayer.Character.HumanoidRootPart.AssemblyLinearVelocity += Vector3.new(0,SpeedAddition,0)*3
+					game.Players.LocalPlayer.Character.HumanoidRootPart.AssemblyLinearVelocity += Vector3.new(0,(SpeedAddition+5),0)*3
 				SpeedAddition = 0
-				game.ReplicatedStorage.Events.MovementGiftMagnet:Fire({DiverAdd = 1 + (SpeedAddition/100)})
+				game.ReplicatedStorage.Events.MovementGiftMagnet:Fire({DiverAdd = 3 + (SpeedAddition/50)})
 				end
 			end
 		end
