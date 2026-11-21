@@ -30,7 +30,7 @@ function RegChar()
 				DotToVelocity = 0
 			end
 			DotToVelocity += 1
-			BodyForce.Force = (Humanoid.MoveDirection*DotToVelocity)*1000
+			BodyForce.Force = (Humanoid.MoveDirection*(2-DotToVelocity))*1000
 			
 			local MoveDirUnit = LastMoveDir:Dot(Humanoid.MoveDirection)
 			LastMoveDir = Humanoid.MoveDirection
