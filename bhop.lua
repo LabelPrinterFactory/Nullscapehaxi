@@ -20,6 +20,7 @@ function RegChar()
 
 
 		if Humanoid then
+			Humanoid.Jump = true
 			local MoveDirUnit = LastMoveDir:Dot(Humanoid.MoveDirection)
 			LastMoveDir = Humanoid.MoveDirection
 			local TurnThisFrame = (1-MoveDirUnit)/DT
