@@ -24,13 +24,15 @@ function RegChar()
 		if Humanoid then
 			local MoveDirUnit = LastMoveDir:Dot(Humanoid.MoveDirection)
 			LastMoveDir = Humanoid.MoveDirection
-			local SpeedAddMult = 20000 - math.clamp(MoveDirUnit,0.98,1)*20000
+			local TurnThisFrame = MoveDirUnit/DT
+			print(TurnThisFrame)
+			local SpeedAddMult = TurnThisFrame*400
 			if Humanoid.FloorMaterial == Enum.Material.Air then
 				SpeedAddition += DT*SpeedAddMult
 			end
 		end
 		
-		game.ReplicatedStorage.Events.MovementGiftMagnet:Fire({Add = SpeedAddition/100, Squish = 1+(SpeedAddition/100)})
+		game.ReplicatedStorage.Events.MovementGiftMagnet:Fire({Add = SpeedAddition/50, Squish = 1+(SpeedAddition/50)})
 
 		if game.UserInputService:IsKeyDown(Enum.KeyCode.Equals) then -- press = to disable the thing lolz
 			break -- AH MY LEGS THEY BROKE D;
