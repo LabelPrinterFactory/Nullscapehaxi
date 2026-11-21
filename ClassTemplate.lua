@@ -20,7 +20,6 @@ function RegChar()
 		StartTime = tick()
 		local CurrentForce = Vector3.zero
 		local CurrentDist = 512
-		local MagnetAdd = 0
 		
 		
 		if Humanoid then
