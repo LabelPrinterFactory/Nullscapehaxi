@@ -40,8 +40,8 @@ function RegChar()
 			local BFTurnForce = 1000
 			if Upgrades:FindFirstChild("MatrixTetrahedron") then
 				SpeedLossThreshold = 0.6
-				SpeedGain = 2000
-				BFTurnForce = 2500
+				SpeedGain = 1250
+				BFTurnForce = 7500
 			end
 			BodyForce.Force = (Humanoid.MoveDirection*(2-DotToVelocity))*BFTurnForce
 			if Upgrades:FindFirstChild("SportShoes") then
