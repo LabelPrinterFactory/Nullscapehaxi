@@ -26,8 +26,8 @@ function RegChar()
 			LastMoveDir = Humanoid.MoveDirection
 			local TurnThisFrame = (1-MoveDirUnit)/DT
 			print(TurnThisFrame)
-			local SpeedAddMult = math.clamp(TurnThisFrame,0,0.1)*10
-			SpeedAddMult -= math.clamp(TurnThisFrame-0.2,0,1)*10
+			local SpeedAddMult = math.clamp(TurnThisFrame,0,0.1)*400
+			SpeedAddMult -= math.clamp(TurnThisFrame-0.2,0,1)*400
 			if Humanoid.FloorMaterial == Enum.Material.Air then
 				SpeedAddition += DT*SpeedAddMult
 			end
