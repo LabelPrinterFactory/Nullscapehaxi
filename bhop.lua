@@ -18,8 +18,6 @@ function RegChar()
 	while game:GetService("RunService").RenderStepped:Wait() do -- such a band aid ahh thing i made in seconds
 		local DT = tick()-StartTime
 		StartTime = tick()
-		local CurrentForce = Vector3.zero
-		local CurrentDist = 512
 		
 		
 		if Humanoid then
