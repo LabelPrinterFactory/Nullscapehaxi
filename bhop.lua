@@ -69,10 +69,10 @@ local CIn
 
 CIn = game:GetService("UserInputService").InputBegan:Connect(function(input: InputObject, gameProcessedEvent: boolean) 
 	if gameProcessedEvent then return end
-	--if Upgrades:FindFirstChild("NinjaBelt") then
+	if Upgrades:FindFirstChild("NinjaBelt") then
 
 		local Shark = false
-		if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.S) --[[and Upgrades:FindFirstChild("SharkTail")]] then
+		if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.S) and Upgrades:FindFirstChild("SharkTail") then
 			Shark = true
 		end
 		
@@ -91,7 +91,7 @@ CIn = game:GetService("UserInputService").InputBegan:Connect(function(input: Inp
 			end
 		end
 		
-	--end
+	end
 end)
 
 game:GetService("RunService"):BindToRenderStep("WalkSpd",Enum.RenderPriority.Character.Value+2,function(DT)
