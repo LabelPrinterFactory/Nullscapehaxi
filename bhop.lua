@@ -5,6 +5,8 @@ game:GetService("GuiService"):SendNotification(notifStuff)
 local Upgrades = game:GetService("ReplicatedStorage"):WaitForChild("UpgradeFolder"):WaitForChild("Upgrades")
 local SpeedAddition = 0
 
+local BodyForce
+
 function RegChar()
 	local Item_Pool = game.Workspace:WaitForChild("Item_Pools") -- gets the item_pool where the gifts are stored
 	local Plr = game.Players.LocalPlayer.Character :: Model -- character
@@ -14,13 +16,22 @@ function RegChar()
 	local LV = 1795151673
 	local Speed = 25
 	local LastMoveDir = Humanoid.MoveDirection
+	BodyForce = Instance.new("BodyForce",Plr.HumanoidRootPart)
+	
 	while game:GetService("RunService").RenderStepped:Wait() do -- such a band aid ahh thing i made in seconds
 		local DT = tick()-StartTime
 		StartTime = tick()
 
 
 		if Humanoid then
-			Humanoid.Jump = true
+			
+			local DotToVelocity = Humanoid.MoveDirection:Dot(Plr.HumanoidRootPart.AssemblyLinearVelocity.Unit)
+			if DotToVelocity ~= DotToVelocity then
+				DotToVelocity = 0
+			end
+			DotToVelocity += 1
+			BodyForce.Force = (Humanoid.MoveDirection*DotToVelocity)*1000
+			
 			local MoveDirUnit = LastMoveDir:Dot(Humanoid.MoveDirection)
 			LastMoveDir = Humanoid.MoveDirection
 			local TurnThisFrame = (1-MoveDirUnit)/DT
