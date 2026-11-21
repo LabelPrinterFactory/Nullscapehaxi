@@ -24,9 +24,9 @@ function RegChar()
 		if Humanoid then
 			local MoveDirUnit = LastMoveDir:Dot(Humanoid.MoveDirection)
 			LastMoveDir = Humanoid.MoveDirection
-			print(MoveDirUnit)
+			local SpeedAddMult = 1000 - math.clamp(MoveDirUnit,0.95,1)*1000
 			if Humanoid.FloorMaterial == Enum.Material.Air then
-				SpeedAddition += DT
+				SpeedAddition += DT*SpeedAddMult
 			end
 		end
 		
