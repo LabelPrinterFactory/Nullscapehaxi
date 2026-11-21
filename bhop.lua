@@ -67,10 +67,11 @@ CIn = game:GetService("UserInputService").InputBegan:Connect(function(input: Inp
 		if input.KeyCode == Enum.KeyCode.F then
 			if SpeedAddition > 0.5 then
 				if Shark == false then
-					game.Players.LocalPlayer.Character.HumanoidRootPart.AssemblyLinearVelocity += game.Players.LocalPlayer.Character.Humanoid.MoveDirection * SpeedAddition
+					game.Players.LocalPlayer.Character.HumanoidRootPart.AssemblyLinearVelocity += game.Players.LocalPlayer.Character.Humanoid.MoveDirection * (SpeedAddition*4)
 					SpeedAddition /= 5
-				else
-					game.Players.LocalPlayer.Character.HumanoidRootPart.AssemblyLinearVelocity += Vector3.new(0,SpeedAddition,0)
+			else
+				game.Players.LocalPlayer.Character.HumanoidRootPart.AssemblyLinearVelocity /= Vector3.new(1,10,1)
+					game.Players.LocalPlayer.Character.HumanoidRootPart.AssemblyLinearVelocity += Vector3.new(0,SpeedAddition,0)*4
 					SpeedAddition = 0
 				end
 			end
