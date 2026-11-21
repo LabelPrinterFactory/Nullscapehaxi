@@ -79,7 +79,7 @@ CIn = game:GetService("UserInputService").InputBegan:Connect(function(input: Inp
 		if input.KeyCode == Enum.KeyCode.F then
 			if SpeedAddition > 0.5 then
 				if Shark == false then
-					game.Players.LocalPlayer.Character.HumanoidRootPart.AssemblyLinearVelocity += (game.Players.LocalPlayer.Character.Humanoid.MoveDirection+Vector3.new(0,0.15,0)) * (SpeedAddition*3)
+					game.Players.LocalPlayer.Character.HumanoidRootPart.AssemblyLinearVelocity += (game.Players.LocalPlayer.Character.Humanoid.MoveDirection+Vector3.new(0,0.02,0)) * (SpeedAddition*3)
 				SpeedAddition /= 5
 				game.ReplicatedStorage.Events.MovementGiftMagnet:Fire({DiverAdd = 1 + (SpeedAddition/100)})
 			else
