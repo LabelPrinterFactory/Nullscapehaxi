@@ -111,6 +111,10 @@ CC = game.UserInputService.InputBegan:Connect(function(input: InputObject, gameP
 		CC:Disconnect()
 		C2:Disconnect()
 		CIn:Disconnect()
+		if BodyForce ~= nil then
+			BodyForce:Destroy()
+			BodyForce = nil
+		end
 		game:GetService("RunService"):UnbindFromRenderStep("WalkSpd")
 		local notifStuff = {	
 			Title = "Bye",
