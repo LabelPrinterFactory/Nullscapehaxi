@@ -43,7 +43,7 @@ function RegChar()
 			end
 		end
 
-		game.ReplicatedStorage.Events.MovementGiftMagnet:Fire({Add = SpeedAddition/50, Squish = 1+(SpeedAddition/50)})
+		game.ReplicatedStorage.Events.MovementGiftMagnet:Fire({Add = SpeedAddition/50, Squish = 1+(SpeedAddition/25)})
 
 		if game.UserInputService:IsKeyDown(Enum.KeyCode.Equals) then -- press = to disable the thing lolz
 			break -- AH MY LEGS THEY BROKE D;
