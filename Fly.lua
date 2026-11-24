@@ -19,7 +19,7 @@ function FindClosetPlayer()
 		if v:FindFirstChild("Humanoid") then
 			if v:FindFirstChild("HumanoidRootPart") then
 				if v ~= Plr then
-					local Dist = (Root.Position - v).Magnitude
+					local Dist = (Root.Position - v.Position).Magnitude
 					if Dist < MaxDist then
 						MaxDist = Dist
 						Target = v
