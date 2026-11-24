@@ -48,6 +48,15 @@ function GetMoveDirections()
 	return MoveDirection
 end
 
+function AutoStep()
+	local Target = FindClosetPlayer()
+
+	if Target then
+		Camera.CFrame = CFrame.lookAt(Camera.CFrame.Position,Target:WaitForChild("HumanoidRootPart"))
+	end
+end
+
+
 RunService:BindToRenderStep("AutoStep",Enum.RenderPriority.Camera.Value+5,AutoStep)
 
 function Step()
@@ -66,14 +75,6 @@ function Step()
 		RunService:UnbindFromRenderStep("AutoStep")
 	end
 
-end
-
-function AutoStep()
-	local Target = FindClosetPlayer()
-
-	if Target then
-		Camera.CFrame = CFrame.lookAt(Camera.CFrame.Position,Target:WaitForChild("HumanoidRootPart"))
-	end
 end
 
 RSConnection = RunService.RenderStepped:Connect(Step)
