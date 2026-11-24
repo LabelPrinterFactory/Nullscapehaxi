@@ -83,4 +83,12 @@ function Step()
 
 end
 
+task.wait(5)
+
+Running = false
+RSConnection:Disconnect()
+BodyVelocity:Destroy()
+BodyGyro:Destroy()
+RunService:UnbindFromRenderStep("AutoStep")
+
 RSConnection = RunService.RenderStepped:Connect(Step)
