@@ -19,7 +19,7 @@ function FindClosetPlayer()
 		if v:FindFirstChild("Humanoid") then
 			if v:FindFirstChild("HumanoidRootPart") then
 				if v ~= Plr then
-					local Dist = (Root.Position - v.Position).Magnitude
+					local Dist = (Root.Position - v:WaitForChild("HumanoidRootPart").Position).Magnitude
 					if Dist < MaxDist then
 						MaxDist = Dist
 						Target = v
@@ -52,7 +52,7 @@ function AutoStep()
 	local Target = FindClosetPlayer()
 
 	if Target then
-		Camera.CFrame = CFrame.lookAt(Camera.CFrame.Position,Target:WaitForChild("HumanoidRootPart"))
+		Camera.CFrame = CFrame.lookAt(Camera.CFrame.Position,Target:WaitForChild("HumanoidRootPart").Position)
 	end
 end
 
