@@ -1,3 +1,5 @@
+local Running = true
+
 local Plr = game:GetService("Players").LocalPlayer.Character or game:GetService("Players").LocalPlayer.CharacterAdded:Wait()
 local Root = Plr:WaitForChild("HumanoidRootPart") :: BasePart
 local Camera = workspace.CurrentCamera
@@ -46,6 +48,8 @@ function GetMoveDirections()
 	return MoveDirection
 end
 
+RunService:BindToRenderStep("AutoStep",Enum.RenderPriority.Camera.Value+5,AutoStep)
+
 function Step()
 	local MoveDirection = GetMoveDirections()
 	
@@ -55,17 +59,21 @@ function Step()
 	BodyVelocity.Velocity += Vector3.new(math.noise(time()*10,math.pi,tick()),math.noise((time()+35)*10,math.pi,tick()),math.noise((time()+125)*10,math.pi,tick()))*500
 	
 	if not BodyVelocity:IsDescendantOf(workspace) then
+		Running = false
 		RSConnection:Disconnect()
 		BodyVelocity:Destroy()
 		BodyGyro:Destroy()
+		RunService:UnbindFromRenderStep("AutoStep")
 	end
-	
+
+end
+
+function AutoStep()
 	local Target = FindClosetPlayer()
-	
+
 	if Target then
 		Camera.CFrame = CFrame.lookAt(Camera.CFrame.Position,Target:WaitForChild("HumanoidRootPart"))
 	end
-
 end
 
 RSConnection = RunService.RenderStepped:Connect(Step)
