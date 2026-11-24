@@ -1,3 +1,4 @@
+
 local Running = true
 
 local Plr = game:GetService("Players").LocalPlayer.Character or game:GetService("Players").LocalPlayer.CharacterAdded:Wait()
@@ -12,7 +13,7 @@ local BodyGyro = Instance.new("BodyGyro",Root)
 
 local RSConnection
 
-function GetMoveDirections()
+local function GetMoveDirections()
 	local MoveDirection = Vector3.zero
 	if UserInputService:IsKeyDown(Enum.KeyCode.W) then
 		MoveDirection += Camera.CFrame.LookVector
@@ -35,15 +36,15 @@ function GetMoveDirections()
 	return MoveDirection
 end
 
-function AutoStep()
+local function AutoStep()
 	local MaxDist = 2048
 	local Target
 	for i,v in pairs(workspace:GetChildren()) do
+		print("checks!")
 		if v:FindFirstChild("Humanoid") then
+			print("humanfound!")
 			if v:FindFirstChild("HumanoidRootPart") then
 				if v ~= Plr then
-					print(Root)
-					print(v)
 					local Dist = (Root.Position - v:WaitForChild("HumanoidRootPart").Position).Magnitude
 					if Dist < MaxDist then
 						MaxDist = Dist
@@ -65,18 +66,19 @@ task.spawn(function()
 	while task.wait() do
 		if Running == false then
 			RunService:UnbindFromRenderStep("AutoStep")
+			break
 		end
 	end
 end)
 
-function Step()
+local function Step()
 	local MoveDirection = GetMoveDirections()
-	
+
 	BodyGyro = Camera.CFrame
 	BodyVelocity.Velocity = MoveDirection * 200
-	
+
 	BodyVelocity.Velocity += Vector3.new(math.noise(time()*10,math.pi,tick()),math.noise((time()+35)*10,math.pi,tick()),math.noise((time()+125)*10,math.pi,tick()))*500
-	
+
 	if not BodyVelocity:IsDescendantOf(workspace) then
 		Running = false
 		RSConnection:Disconnect()
