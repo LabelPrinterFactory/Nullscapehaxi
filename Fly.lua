@@ -1,5 +1,5 @@
-local Plr = game.Players.LocalPlayer.Character or game.Players.LocalPlayer.CharacterAdded:Wait()
-local Root = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart") :: BasePart
+local Plr = game:GetService("Players").LocalPlayer.Character or game:GetService("Players").LocalPlayer.CharacterAdded:Wait()
+local Root = Plr:WaitForChild("HumanoidRootPart") :: BasePart
 local Camera = workspace.CurrentCamera
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
