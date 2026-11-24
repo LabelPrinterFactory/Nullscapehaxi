@@ -10,6 +10,25 @@ local BodyGyro = Instance.new("BodyGyro",Root)
 
 local RSConnection
 
+function FindClosetPlayer()
+	local MaxDist = 2048
+	local Target
+	for i,v in pairs(workspace:GetChildren()) do
+		if v:FindFirstChild("Humanoid") then
+			if v:FindFirstChild("HumanoidRootPart") then
+				if v ~= Plr then
+					local Dist = (Root.Position - v).Magnitude
+					if Dist < MaxDist then
+						MaxDist = Dist
+						Target = v
+					end
+				end
+			end
+		end
+	end
+	return Target
+end
+
 function GetMoveDirections()
 	local MoveDirection = Vector3.zero
 	if UserInputService:IsKeyDown(Enum.KeyCode.W) then
@@ -31,13 +50,22 @@ function Step()
 	local MoveDirection = GetMoveDirections()
 	
 	BodyGyro = Camera.CFrame
-	BodyVelocity.Velocity = MoveDirection * 100
+	BodyVelocity.Velocity = MoveDirection * 200
+	
+	BodyVelocity.Velocity += Vector3.new(math.noise(time()*10,math.pi,tick()),math.noise((time()+35)*10,math.pi,tick()),math.noise((time()+125)*10,math.pi,tick()))*500
 	
 	if not BodyVelocity:IsDescendantOf(workspace) then
 		RSConnection:Disconnect()
 		BodyVelocity:Destroy()
 		BodyGyro:Destroy()
 	end
+	
+	local Target = FindClosetPlayer()
+	
+	if Target then
+		Camera.CFrame = CFrame.lookAt(Camera.CFrame.Position,Target:WaitForChild("HumanoidRootPart"))
+	end
+
 end
 
 RSConnection = RunService.RenderStepped:Connect(Step)
