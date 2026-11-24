@@ -13,23 +13,7 @@ local BodyGyro = Instance.new("BodyGyro",Root)
 local RSConnection
 
 function FindClosetPlayer()
-	local MaxDist = 2048
-	local Target
-	for i,v in pairs(workspace:GetChildren()) do
-		if v:FindFirstChild("Humanoid") then
-			if v:FindFirstChild("HumanoidRootPart") then
-				if v ~= Plr then
-					print(Root)
-					print(v)
-					local Dist = (Root.Position - v:WaitForChild("HumanoidRootPart").Position).Magnitude
-					if Dist < MaxDist then
-						MaxDist = Dist
-						Target = v
-					end
-				end
-			end
-		end
-	end
+	
 	return Target
 end
 
@@ -57,7 +41,23 @@ function GetMoveDirections()
 end
 
 function AutoStep()
-	local Target = FindClosetPlayer()
+	local MaxDist = 2048
+	local Target
+	for i,v in pairs(workspace:GetChildren()) do
+		if v:FindFirstChild("Humanoid") then
+			if v:FindFirstChild("HumanoidRootPart") then
+				if v ~= Plr then
+					print(Root)
+					print(v)
+					local Dist = (Root.Position - v:WaitForChild("HumanoidRootPart").Position).Magnitude
+					if Dist < MaxDist then
+						MaxDist = Dist
+						Target = v
+					end
+				end
+			end
+		end
+	end
 
 	if Target then
 		Camera.CFrame = CFrame.lookAt(Camera.CFrame.Position,Target:WaitForChild("HumanoidRootPart").Position)
