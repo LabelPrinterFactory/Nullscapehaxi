@@ -45,6 +45,12 @@ function GetMoveDirections()
 	if UserInputService:IsKeyDown(Enum.KeyCode.D) then
 		MoveDirection += Camera.CFrame.RightVector
 	end
+	if UserInputService:IsKeyDown(Enum.KeyCode.E) then
+		MoveDirection += Camera.CFrame.UpVector
+	end
+	if UserInputService:IsKeyDown(Enum.KeyCode.Q) then
+		MoveDirection -= Camera.CFrame.UpVector
+	end
 	return MoveDirection
 end
 
