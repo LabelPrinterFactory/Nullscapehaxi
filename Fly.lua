@@ -12,11 +12,6 @@ local BodyGyro = Instance.new("BodyGyro",Root)
 
 local RSConnection
 
-function FindClosetPlayer()
-	
-	return Target
-end
-
 function GetMoveDirections()
 	local MoveDirection = Vector3.zero
 	if UserInputService:IsKeyDown(Enum.KeyCode.W) then
@@ -66,6 +61,13 @@ end
 
 
 RunService:BindToRenderStep("AutoStep",Enum.RenderPriority.Camera.Value+5,AutoStep)
+task.spawn(function()
+	while task.wait() do
+		if Running == false then
+			RunService:UnbindFromRenderStep("AutoStep")
+		end
+	end
+end)
 
 function Step()
 	local MoveDirection = GetMoveDirections()
@@ -78,19 +80,12 @@ function Step()
 	if not BodyVelocity:IsDescendantOf(workspace) then
 		Running = false
 		RSConnection:Disconnect()
-		BodyVelocity:Destroy()
-		BodyGyro:Destroy()
-		RunService:UnbindFromRenderStep("AutoStep")
+		if BodyVelocity then
+			BodyVelocity:Destroy()
+			BodyGyro:Destroy()
+		end
 	end
 
 end
-
-task.wait(5)
-
-Running = false
-RSConnection:Disconnect()
-BodyVelocity:Destroy()
-BodyGyro:Destroy()
-RunService:UnbindFromRenderStep("AutoStep")
 
 RSConnection = RunService.RenderStepped:Connect(Step)
