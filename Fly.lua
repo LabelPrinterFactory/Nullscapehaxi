@@ -61,7 +61,7 @@ local function AutoStep()
 end
 
 
-RunService:BindToRenderStep("AutoStep",Enum.RenderPriority.Camera.Value+5,AutoStep)
+RunService:BindToRenderStep("AutoStep",Enum.RenderPriority.Last.Value-1,AutoStep)
 task.spawn(function()
 	while task.wait() do
 		if Running == false then
@@ -75,9 +75,9 @@ local function Step()
 	local MoveDirection = GetMoveDirections()
 
 	BodyGyro = Camera.CFrame
-	BodyVelocity.Velocity = MoveDirection * 200
+	BodyVelocity.Velocity = MoveDirection * 100
 
-	BodyVelocity.Velocity += Vector3.new(math.noise(time()*10,math.pi,tick()),math.noise((time()+35)*10,math.pi,tick()),math.noise((time()+125)*10,math.pi,tick()))*500
+	BodyVelocity.Velocity += Vector3.new(math.noise(time()*10,math.pi,tick()),math.noise((time()+35)*10,math.pi,tick()),math.noise((time()+125)*10,math.pi,tick()))*200
 
 	if not BodyVelocity:IsDescendantOf(workspace) then
 		Running = false
