@@ -1,93 +1,126 @@
+function WorkLol()
 
-local Running = true
+	local Running = true
 
-local Plr = game:GetService("Players").LocalPlayer.Character or game:GetService("Players").LocalPlayer.CharacterAdded:Wait()
-local Root = Plr:WaitForChild("HumanoidRootPart") :: BasePart
-local Camera = workspace.CurrentCamera
-local RunService = game:GetService("RunService")
-local UserInputService = game:GetService("UserInputService")
+	local Plr = game:GetService("Players").LocalPlayer.Character or game:GetService("Players").LocalPlayer.CharacterAdded:Wait()
+	local Root = Plr:WaitForChild("HumanoidRootPart") :: BasePart
+	local Camera = workspace.CurrentCamera
+	local RunService = game:GetService("RunService")
+	local UserInputService = game:GetService("UserInputService")
 
-local BodyVelocity = Instance.new("BodyVelocity",Root)
-BodyVelocity.MaxForce = Vector3.one *100000
-local BodyGyro = Instance.new("BodyGyro",Root)
+	local BodyVelocity = Instance.new("BodyVelocity",Root)
+	BodyVelocity.MaxForce = Vector3.one *100000
+	local BodyGyro = Instance.new("BodyGyro",Root)
 
-local RSConnection
+	local RSConnection
 
-local function GetMoveDirections()
-	local MoveDirection = Vector3.zero
-	if UserInputService:IsKeyDown(Enum.KeyCode.W) then
-		MoveDirection += Camera.CFrame.LookVector
+	local function GetMoveDirections()
+		local MoveDirection = Vector3.zero
+		if UserInputService:IsKeyDown(Enum.KeyCode.W) then
+			MoveDirection += Camera.CFrame.LookVector
+		end
+		if UserInputService:IsKeyDown(Enum.KeyCode.S) then
+			MoveDirection -= Camera.CFrame.LookVector
+		end
+		if UserInputService:IsKeyDown(Enum.KeyCode.A) then
+			MoveDirection -= Camera.CFrame.RightVector
+		end
+		if UserInputService:IsKeyDown(Enum.KeyCode.D) then
+			MoveDirection += Camera.CFrame.RightVector
+		end
+		if UserInputService:IsKeyDown(Enum.KeyCode.E) then
+			MoveDirection += Camera.CFrame.UpVector
+		end
+		if UserInputService:IsKeyDown(Enum.KeyCode.Q) then
+			MoveDirection -= Camera.CFrame.UpVector
+		end
+		return MoveDirection
 	end
-	if UserInputService:IsKeyDown(Enum.KeyCode.S) then
-		MoveDirection -= Camera.CFrame.LookVector
-	end
-	if UserInputService:IsKeyDown(Enum.KeyCode.A) then
-		MoveDirection -= Camera.CFrame.RightVector
-	end
-	if UserInputService:IsKeyDown(Enum.KeyCode.D) then
-		MoveDirection += Camera.CFrame.RightVector
-	end
-	if UserInputService:IsKeyDown(Enum.KeyCode.E) then
-		MoveDirection += Camera.CFrame.UpVector
-	end
-	if UserInputService:IsKeyDown(Enum.KeyCode.Q) then
-		MoveDirection -= Camera.CFrame.UpVector
-	end
-	return MoveDirection
-end
 
-local function AutoStep()
-	local MaxDist = 2048
-	local Target
-	for i,v in pairs(workspace:GetChildren()) do
-		print("checks!")
-		if v:FindFirstChild("Humanoid") then
-			print("humanfound!")
-			if v:FindFirstChild("HumanoidRootPart") then
-				if v ~= Plr then
-					local Dist = (Root.Position - v:WaitForChild("HumanoidRootPart").Position).Magnitude
-					if Dist < MaxDist then
-						MaxDist = Dist
-						Target = v
+	local function AutoStep()
+		local MaxDist = 2048
+		local Target
+		for i,v in pairs(workspace:GetChildren()) do
+			print("checks!")
+			if v:FindFirstChild("Humanoid") then
+				print("humanfound!")
+				if v:FindFirstChild("HumanoidRootPart") then
+					if v ~= Plr then
+						local Dist = (Root.Position - v:WaitForChild("HumanoidRootPart").Position).Magnitude
+						if Dist < MaxDist then
+							MaxDist = Dist
+							Target = v
+						end
 					end
 				end
 			end
 		end
+
+		if Target then
+			Camera.CFrame = CFrame.lookAt(Camera.CFrame.Position,Target:WaitForChild("HumanoidRootPart").Position)
+		end
 	end
 
-	if Target then
-		Camera.CFrame = CFrame.lookAt(Camera.CFrame.Position,Target:WaitForChild("HumanoidRootPart").Position)
+
+	RunService:BindToRenderStep("AutoStep",Enum.RenderPriority.Last.Value-1,AutoStep)
+	task.spawn(function()
+		while task.wait() do
+			if Running == false then
+				RunService:UnbindFromRenderStep("AutoStep")
+				break
+			end
+		end
+	end)
+
+	local function Step()
+		local MoveDirection = GetMoveDirections()
+
+		BodyGyro = Camera.CFrame
+		BodyVelocity.Velocity = MoveDirection * 100
+
+		BodyVelocity.Velocity += Vector3.new(math.noise(time()*10,math.pi,tick()),math.noise((time()+35)*10,math.pi,tick()),math.noise((time()+125)*10,math.pi,tick()))*200
+
+		if not BodyVelocity:IsDescendantOf(workspace) then
+			Running = false
+			RSConnection:Disconnect()
+			if BodyVelocity then
+				BodyVelocity:Destroy()
+				BodyGyro:Destroy()
+			end
+		end
+
 	end
+
+	RSConnection = RunService.RenderStepped:Connect(Step)
+
 end
 
 
-RunService:BindToRenderStep("AutoStep",Enum.RenderPriority.Last.Value-1,AutoStep)
-task.spawn(function()
-	while task.wait() do
-		if Running == false then
-			RunService:UnbindFromRenderStep("AutoStep")
-			break
+CC = game.UserInputService.InputBegan:Connect(function(input: InputObject, gameProcessedEvent: boolean) 
+	if gameProcessedEvent then return end
+	if input.KeyCode == Enum.KeyCode.Equals then
+		CC:Disconnect()
+		C2:Disconnect()
+		CIn:Disconnect()
+		if BodyForce ~= nil then
+			BodyForce:Destroy()
+			BodyForce = nil
 		end
+		game:GetService("RunService"):UnbindFromRenderStep("WalkSpd")
+		local notifStuff = {	
+			Title = "Bye",
+		}
+		game:GetService("GuiService"):SendNotification(notifStuff)
 	end
 end)
 
-local function Step()
-	local MoveDirection = GetMoveDirections()
 
-	BodyGyro = Camera.CFrame
-	BodyVelocity.Velocity = MoveDirection * 100
-
-	BodyVelocity.Velocity += Vector3.new(math.noise(time()*10,math.pi,tick()),math.noise((time()+35)*10,math.pi,tick()),math.noise((time()+125)*10,math.pi,tick()))*200
-
-	if not BodyVelocity:IsDescendantOf(workspace) then
-		Running = false
-		RSConnection:Disconnect()
-		if BodyVelocity then
-			BodyVelocity:Destroy()
-			BodyGyro:Destroy()
-		end
-	end
-
-end
-
-RSConnection = RunService.RenderStepped:Connect(Step)
+task.spawn(function()
+	WorkLol()
+end)
+C2 = game.Players.LocalPlayer.CharacterAdded:Connect(function(character: Model)
+	task.spawn(function()
+		task.wait(1)
+		WorkLol()
+	end)
+end)
