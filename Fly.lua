@@ -73,6 +73,7 @@ function WorkLol()
 	end)
 
 	local function Step()
+		workspace.CurrentCamera.CameraType = Enum.CameraType.Scriptable
 		local MoveDirection = GetMoveDirections()
 
 		BodyGyro = Camera.CFrame
@@ -95,32 +96,6 @@ function WorkLol()
 
 end
 
-
-CC = game.UserInputService.InputBegan:Connect(function(input: InputObject, gameProcessedEvent: boolean) 
-	if gameProcessedEvent then return end
-	if input.KeyCode == Enum.KeyCode.Equals then
-		CC:Disconnect()
-		C2:Disconnect()
-		CIn:Disconnect()
-		if BodyForce ~= nil then
-			BodyForce:Destroy()
-			BodyForce = nil
-		end
-		game:GetService("RunService"):UnbindFromRenderStep("WalkSpd")
-		local notifStuff = {	
-			Title = "Bye",
-		}
-		game:GetService("GuiService"):SendNotification(notifStuff)
-	end
-end)
-
-
 task.spawn(function()
 	WorkLol()
-end)
-C2 = game.Players.LocalPlayer.CharacterAdded:Connect(function(character: Model)
-	task.spawn(function()
-		task.wait(1)
-		WorkLol()
-	end)
 end)
