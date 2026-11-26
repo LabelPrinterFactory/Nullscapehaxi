@@ -73,6 +73,11 @@ function WorkLol()
 	end)
 
 	local function Step()
+		for i,v in pairs(Plr:GetDescendants()) do
+			if v:IsA("BasePart") then
+				v.CanCollide = false
+			end
+		end
 		workspace.CurrentCamera.CameraType = Enum.CameraType.Scriptable
 		local MoveDirection = GetMoveDirections()
 
